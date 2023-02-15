@@ -1,5 +1,14 @@
-import * as React from 'react';
+import React from 'react';
+
+import Content from '@/components/layout/Content';
+import Layout from '@/components/layout/Layout';
+import Sidebar from '@/components/layout/Sidebar';
 
 export default function HomePage() {
-  return <div>HomePage</div>;
+  return (
+    <Layout>
+      <Sidebar />
+      <Content />
+    </Layout>
+  );
 }
