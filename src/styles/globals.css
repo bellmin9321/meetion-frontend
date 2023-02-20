@@ -85,6 +85,10 @@
   .icon {
     @apply h-5 w-5 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white
   }
+
+  .textarea {
+    @apply block w-4/5 border-none bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500
+  }
 }
 
 @layer utilities {
