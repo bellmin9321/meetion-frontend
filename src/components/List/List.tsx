@@ -11,10 +11,10 @@ function List({ category }: ListProp) {
     <li>
       <a
         href="#"
-        className="flex items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+        className="rounded-m flex items-center py-1 text-base font-normal text-gray-500 hover:bg-gray-200 dark:text-white dark:hover:bg-gray-700"
       >
-        <span>{category.icon}</span>
-        <span className="ml-3">{category.name}</span>
+        <span className="ml-4">{category.icon}</span>
+        <span className="ml-2">{category.name}</span>
       </a>
     </li>
   );
