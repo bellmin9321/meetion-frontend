@@ -12,14 +12,14 @@ const Content = () => {
       <div className="p-4 sm:ml-64">
         <textarea
           id="message"
-          className="textarea text-3lg mb-5 "
+          className="textarea text-3lg mb-5"
           placeholder="제목 없음"
           onChange={(e) => setTitle(e.target.value)}
         />
 
         <textarea
           id="message"
-          className="textarea block w-4/5 text-sm"
+          className="textarea text-sm"
           placeholder="'/'를 입력해 명령어를 사용하세요"
           onChange={(e) => setDesc(e.target.value)}
         />
