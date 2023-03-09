@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import React from 'react';
 
 import Content from '@/components/layout/Content';
@@ -6,9 +7,15 @@ import Sidebar from '@/components/layout/Sidebar';
 
 export default function HomePage() {
   return (
-    <Layout>
-      <Sidebar />
-      <Content />
-    </Layout>
+    <>
+      <Head>
+        <title>Meetion</title>
+        <link rel="icon" />
+      </Head>
+      <Layout>
+        <Sidebar />
+        <Content />
+      </Layout>
+    </>
   );
 }
