@@ -1,17 +1,19 @@
 import { AppProps } from 'next/app';
-import { useState } from 'react';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { Suspense } from 'react';
+import { QueryClientProvider } from 'react-query';
 import { RecoilRoot } from 'recoil';
 
 import '@/styles/globals.css';
 
-function MyApp({ Component, pageProps }: AppProps) {
-  const [queryClient] = useState(() => new QueryClient());
+import { queryClient } from '@/api/queryClient';
 
+function MyApp({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <RecoilRoot>
-        <Component {...pageProps} />
+        <Suspense fallback={<div>Loading...</div>}>
+          <Component {...pageProps} />
+        </Suspense>
       </RecoilRoot>
     </QueryClientProvider>
   );
