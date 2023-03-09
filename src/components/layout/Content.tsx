@@ -9,16 +9,22 @@ import { pageState } from '@/recoil';
 
 import Header from './Header';
 
-const Content = () => {
-  const [page, setPage] = useRecoilState(pageState);
+import { PageType } from '@/types';
+
+interface ContentProp {
+  page: PageType | undefined;
+}
+
+function Content({ page }: ContentProp) {
+  const [newPage, setNewPage] = useRecoilState(pageState);
   const [title, setTitle] = useState<string>('');
   const [desc, setDesc] = useState<string>('');
   const debouncedTitle = useDebounce({ value: title, delay: 500 });
   const debouncedDesc = useDebounce({ value: desc, delay: 500 });
 
   useEffect(() => {
-    setPage({
-      ...page,
+    setNewPage({
+      ...newPage,
       creator: 'd@gmail.com',
       title: debouncedTitle,
       desc: debouncedDesc,
@@ -34,7 +40,7 @@ const Content = () => {
       return;
     }
 
-    addPageMutate(page, {
+    addPageMutate(newPage, {
       onSuccess: (data) => {
         console.log(data);
         queryClient.invalidateQueries('pages');
@@ -54,6 +60,7 @@ const Content = () => {
           className="textarea border:none mb-5 text-4xl  font-bold placeholder:text-4xl placeholder:text-gray-300"
           placeholder="제목 없음"
           onChange={(e) => setTitle(e.target.value)}
+          value={page?.title}
         />
 
         <textarea
@@ -61,6 +68,7 @@ const Content = () => {
           className="textarea placeholder:text-m placeholder:text-gray-400"
           placeholder="'/'를 입력해 명령어를 사용하세요"
           onChange={(e) => setDesc(e.target.value)}
+          value={page?.desc}
         />
         <button
           className="rounded bg-blue-500 px-3 py-2 text-white"
@@ -71,6 +79,6 @@ const Content = () => {
       </div>
     </>
   );
-};
+}
 
 export default Content;
