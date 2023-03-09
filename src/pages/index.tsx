@@ -14,7 +14,7 @@ export default function HomePage() {
       </Head>
       <Layout>
         <Sidebar />
-        <Content />
+        <Content page={undefined} />
       </Layout>
     </>
   );
