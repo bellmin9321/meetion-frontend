@@ -6,7 +6,7 @@ import { FiMoreHorizontal } from 'react-icons/fi';
 export default function Header() {
   return (
     <header>
-      <div className="container flex flex-col flex-wrap items-center p-5 md:flex-row">
+      <div className="flex flex-col flex-wrap items-center p-5 md:flex-row">
         <nav className="flex flex-wrap items-center justify-center text-base md:ml-auto">
           <span className="mr-3 cursor-pointer rounded-md py-1 px-2 hover:bg-gray-200 ">
             공유
