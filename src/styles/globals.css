@@ -87,7 +87,11 @@
   }
 
   .textarea {
-    @apply block w-4/5 border-none bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500
+    @apply h-[60px] w-4/5 border-none text-gray-900  resize-none shadow-none focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400
+  }
+
+  .toolList {
+    @apply flex items-center py-1 text-base font-normal text-gray-500 hover:bg-gray-200 dark:text-white dark:hover:bg-gray-700
   }
 }
 
