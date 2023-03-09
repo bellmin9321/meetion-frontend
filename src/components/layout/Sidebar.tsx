@@ -1,9 +1,15 @@
 import Link from 'next/link';
 import React, { ReactNode } from 'react';
+import { AiOutlineRight } from 'react-icons/ai';
 import { BiPlus, BiSearch, BiTime } from 'react-icons/bi';
 import { FaRegSun } from 'react-icons/fa';
+import { useQuery } from 'react-query';
+
+import { getPageList } from '@/api/page';
 
 import List from '../List/List';
+
+import { PageType } from '@/types';
 
 export interface CategoryType {
   name: string;
@@ -11,6 +17,8 @@ export interface CategoryType {
 }
 
 function Sidebar() {
+  const { data } = useQuery('pages', getPageList);
+
   const categories = [
     { name: '검색', icon: <BiSearch className="icon" /> },
     { name: '업데이트', icon: <BiTime className="icon" /> },
@@ -38,7 +46,20 @@ function Sidebar() {
               return <List key={index} category={category} />;
             })}
           </ul>
-          <div className="ml-4">개인 페이지</div>
+          <div className="ml-4 mb-2 text-sm text-gray-500">개인 페이지</div>
+          <ul className="ml-4">
+            {data?.length > 0 &&
+              data.map((page: PageType) => {
+                return (
+                  <div key={page._id} className="mb-1 flex items-center">
+                    <span>
+                      <AiOutlineRight className="text-sm  text-gray-600" />
+                    </span>
+                    <li className="ml-2 text-gray-600">{page?.title}</li>
+                  </div>
+                );
+              })}
+          </ul>
           <div className="fixed bottom-0 flex w-full cursor-pointer border-t-[1px] py-4 hover:bg-gray-200">
             <span className="ml-4">
               <BiPlus className="mr-3 h-6 w-6 text-gray-500" />
