@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { CategoryType } from '../layout/Sidebar';
+import { CategoryType } from '../layout/Sidebar/Options';
 
 interface ListProp {
   category: CategoryType;
