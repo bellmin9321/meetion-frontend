@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
-import useAddPageMutation from '@/hooks/useAddPageMutation';
 import useDebounce from '@/hooks/useDebounce';
+import usePageMutation from '@/hooks/usePageMutation';
 
 import { queryClient } from '@/api/queryClient';
 import { pageState } from '@/recoil';
 
-import Header from './Header';
+import ContentHeader from './ContentHeader';
 
 import { PageType } from '@/types';
 
@@ -21,6 +21,7 @@ function Content({ page }: ContentProp) {
   const [desc, setDesc] = useState<string>('');
   const debouncedTitle = useDebounce({ value: title, delay: 500 });
   const debouncedDesc = useDebounce({ value: desc, delay: 500 });
+  const { addPage } = usePageMutation();
 
   useEffect(() => {
     setNewPage({
@@ -32,7 +33,7 @@ function Content({ page }: ContentProp) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedTitle, debouncedDesc]);
 
-  const { mutate: addPageMutate } = useAddPageMutation();
+  const { mutate: addPageMutate } = addPage;
 
   const handleAddPage = () => {
     if (!title) {
@@ -41,8 +42,7 @@ function Content({ page }: ContentProp) {
     }
 
     addPageMutate(newPage, {
-      onSuccess: (data) => {
-        console.log(data);
+      onSuccess: (_id) => {
         queryClient.invalidateQueries('pages');
       },
       onError: (error, variable, context) => {
@@ -53,7 +53,7 @@ function Content({ page }: ContentProp) {
 
   return (
     <>
-      <Header />
+      <ContentHeader />
       <div className="flex flex-col items-center p-4 sm:ml-64">
         <textarea
           id="message"
