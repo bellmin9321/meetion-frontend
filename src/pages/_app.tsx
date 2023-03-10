@@ -5,7 +5,7 @@ import { RecoilRoot } from 'recoil';
 
 import '@/styles/globals.css';
 
-import { queryClient } from '@/api/queryClient';
+import { queryClient } from '@/lib/api/queryClient';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

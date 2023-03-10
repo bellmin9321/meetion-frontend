@@ -15,8 +15,8 @@ export const queryClient = new QueryClient({
         console.log('Error: ', error);
       }
     },
-    onSuccess: (data) => {
-      // console.log(data);
-    },
+    // onSuccess: (data) => {
+    //   console.log(data);
+    // },
   }),
 });

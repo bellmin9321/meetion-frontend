@@ -1,11 +1,11 @@
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
-import useDebounce from '@/hooks/useDebounce';
-import usePageMutation from '@/hooks/usePageMutation';
-
-import { queryClient } from '@/api/queryClient';
-import { pageState } from '@/recoil';
+import { queryClient } from '@/lib/api/queryClient';
+import useDebounce from '@/lib/hooks/useDebounce';
+import usePageMutation from '@/lib/hooks/usePageMutation';
+import { pageState } from '@/lib/recoil';
 
 import ContentHeader from './ContentHeader';
 
@@ -22,6 +22,7 @@ function Content({ page }: ContentProp) {
   const debouncedTitle = useDebounce({ value: title, delay: 500 });
   const debouncedDesc = useDebounce({ value: desc, delay: 500 });
   const { addPage } = usePageMutation();
+  const router = useRouter();
 
   useEffect(() => {
     setNewPage({
@@ -44,6 +45,7 @@ function Content({ page }: ContentProp) {
     addPageMutate(newPage, {
       onSuccess: (_id) => {
         queryClient.invalidateQueries('pages');
+        router.push(`page/${_id}`, undefined, { shallow: true });
       },
       onError: (error, variable, context) => {
         console.log(error);
