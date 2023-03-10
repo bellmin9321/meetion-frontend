@@ -29,3 +29,20 @@ export const createNewPage = async (body: PageType) => {
     console.log(err);
   }
 };
+
+export const deletePage = async (id: string) => {
+  try {
+    const { data } = await axios.delete<PageType>(
+      process.env.LOCAL_BASE_URL + 'myPage',
+      {
+        data: {
+          id,
+        },
+      },
+    );
+
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+};
