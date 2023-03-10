@@ -5,6 +5,7 @@ import { AiFillDelete, AiOutlineRight } from 'react-icons/ai';
 import { useQuery } from 'react-query';
 import { useSetRecoilState } from 'recoil';
 
+import { changeParam } from '@/lib/service';
 import usePageMutation from '@/hooks/usePageMutation';
 
 import { getPageList } from '@/api/page';
@@ -46,7 +47,7 @@ function MyPage() {
           data.map((page: PageType) => {
             return (
               <div key={page._id} className="mb-1 flex justify-between">
-                <Link href={`/page/${page._id}`}>
+                <Link href={`/page/${changeParam(page.title)}${page._id}}`}>
                   <div className="flex items-center">
                     <span>
                       <AiOutlineRight className="text-sm  text-gray-600" />
