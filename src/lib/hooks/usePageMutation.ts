@@ -1,6 +1,6 @@
 import { useMutation } from 'react-query';
 
-import { createNewPage, deletePage } from '@/api/page';
+import { createNewPage, deletePage } from '@/lib/api/page';
 
 export default function usePageMutation() {
   const addPage = useMutation(createNewPage);

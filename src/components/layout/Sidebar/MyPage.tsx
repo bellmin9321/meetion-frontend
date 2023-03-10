@@ -5,12 +5,11 @@ import { AiFillDelete, AiOutlineRight } from 'react-icons/ai';
 import { useQuery } from 'react-query';
 import { useSetRecoilState } from 'recoil';
 
+import { getPageList } from '@/lib/api/page';
+import { queryClient } from '@/lib/api/queryClient';
+import usePageMutation from '@/lib/hooks/usePageMutation';
+import { pageList } from '@/lib/recoil';
 import { changeParam } from '@/lib/service';
-import usePageMutation from '@/hooks/usePageMutation';
-
-import { getPageList } from '@/api/page';
-import { queryClient } from '@/api/queryClient';
-import { pageList } from '@/recoil';
 
 import { PageType } from '@/types';
 

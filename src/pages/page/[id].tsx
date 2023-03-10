@@ -1,10 +1,10 @@
 import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
 
+import { pageList } from '@/lib/recoil';
+
 import Content from '@/components/layout/Content';
 import Layout from '@/components/layout/Layout';
-
-import { pageList } from '@/recoil';
 
 const Page = () => {
   const router = useRouter();
