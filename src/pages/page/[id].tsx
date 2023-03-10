@@ -3,7 +3,6 @@ import { useRecoilValue } from 'recoil';
 
 import Content from '@/components/layout/Content';
 import Layout from '@/components/layout/Layout';
-import Sidebar from '@/components/layout/Sidebar';
 
 import { pageList } from '@/recoil';
 
@@ -16,7 +15,6 @@ const Page = () => {
 
   return (
     <Layout>
-      <Sidebar />
       <Content page={target} />
     </Layout>
   );
