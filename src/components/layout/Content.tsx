@@ -6,6 +6,7 @@ import { queryClient } from '@/lib/api/queryClient';
 import useDebounce from '@/lib/hooks/useDebounce';
 import usePageMutation from '@/lib/hooks/usePageMutation';
 import { pageState } from '@/lib/recoil';
+import { changeParam } from '@/lib/service';
 
 import ContentHeader from './ContentHeader';
 
@@ -36,7 +37,6 @@ function Content({ page }: ContentProp) {
 
   const { mutate: addPageMutate } = addPage;
   const { mutate: editPageMutate } = editPage;
-  console.log('########page', page);
 
   const handleAddPage = () => {
     if (!title) {
@@ -56,7 +56,6 @@ function Content({ page }: ContentProp) {
       },
     });
   };
-  console.log(title, desc);
 
   const handleEditPage = () => {
     if (!title && !page?.title) {
@@ -74,12 +73,12 @@ function Content({ page }: ContentProp) {
       title: debouncedTitle,
       desc: debouncedDesc,
     };
-    console.log('########update', updatedPage);
 
     editPageMutate(updatedPage, {
-      onSuccess: (data) => {
-        console.log(data);
-        router.push(`/`);
+      onSuccess: () => {
+        router.push(
+          `/page/${changeParam(updatedPage.title)}${updatedPage._id}`,
+        );
         queryClient.invalidateQueries('pages');
       },
       onError: (error) => {
