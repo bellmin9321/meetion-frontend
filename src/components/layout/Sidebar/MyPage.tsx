@@ -25,14 +25,13 @@ function MyPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleDelete = (id: string) => {
-    console.log('delete', id);
-    deletePageMutate(id, {
+  const handleDelete = (id?: string) => {
+    deletePageMutate(id ?? '', {
       onSuccess: () => {
         queryClient.invalidateQueries('pages');
         router.push('/');
       },
-      onError: (error, variable, context) => {
+      onError: (error) => {
         console.log(error);
       },
     });
@@ -41,12 +40,15 @@ function MyPage() {
   return (
     <>
       <div className="ml-4 mb-2 text-sm text-gray-500">개인 페이지</div>
-      <ul className="ml-4">
+      <ul>
         {data?.length > 0 &&
           data.map((page: PageType) => {
             return (
-              <div key={page._id} className="mb-1 flex justify-between">
-                <Link href={`/page/${changeParam(page.title)}${page._id}}`}>
+              <div
+                key={page._id}
+                className="flex justify-between py-1 pl-4 hover:bg-gray-200"
+              >
+                <Link href={`/page/${changeParam(page.title)}${page._id}`}>
                   <div className="flex items-center">
                     <span>
                       <AiOutlineRight className="text-sm  text-gray-600" />
@@ -56,7 +58,7 @@ function MyPage() {
                 </Link>
                 <div className="flex items-center">
                   <AiFillDelete
-                    className="mr-4 flex cursor-pointer items-center hover:text-red-500"
+                    className="mr-4 flex cursor-pointer items-center text-gray-600 hover:text-red-500"
                     onClick={() => handleDelete(page._id)}
                   />
                 </div>
