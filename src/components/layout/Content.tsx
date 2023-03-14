@@ -12,7 +12,7 @@ import ContentHeader from './ContentHeader';
 import { PageType } from '@/types';
 
 interface ContentProp {
-  page: PageType | undefined;
+  page?: PageType;
 }
 
 function Content({ page }: ContentProp) {
@@ -21,7 +21,7 @@ function Content({ page }: ContentProp) {
   const [desc, setDesc] = useState<string>('');
   const debouncedTitle = useDebounce({ value: title, delay: 500 });
   const debouncedDesc = useDebounce({ value: desc, delay: 500 });
-  const { addPage } = usePageMutation();
+  const { addPage, editPage } = usePageMutation();
   const router = useRouter();
 
   useEffect(() => {
@@ -35,6 +35,8 @@ function Content({ page }: ContentProp) {
   }, [debouncedTitle, debouncedDesc]);
 
   const { mutate: addPageMutate } = addPage;
+  const { mutate: editPageMutate } = editPage;
+  console.log('########page', page);
 
   const handleAddPage = () => {
     if (!title) {
@@ -43,11 +45,44 @@ function Content({ page }: ContentProp) {
     }
 
     addPageMutate(newPage, {
-      onSuccess: (_id) => {
+      onSuccess: () => {
         queryClient.invalidateQueries('pages');
-        router.push(`page/${_id}`, undefined, { shallow: true });
+        router.push(`/`);
+        setTitle('');
+        setDesc('');
       },
-      onError: (error, variable, context) => {
+      onError: (error) => {
+        console.log(error);
+      },
+    });
+  };
+  console.log(title, desc);
+
+  const handleEditPage = () => {
+    if (!title && !page?.title) {
+      alert('제목을 입력해주세요');
+      return;
+    }
+
+    if (page?.title === title && page?.desc === desc) {
+      alert('수정된 글자가 없습니다.');
+    }
+
+    const updatedPage = {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      ...page!,
+      title: debouncedTitle,
+      desc: debouncedDesc,
+    };
+    console.log('########update', updatedPage);
+
+    editPageMutate(updatedPage, {
+      onSuccess: (data) => {
+        console.log(data);
+        router.push(`/`);
+        queryClient.invalidateQueries('pages');
+      },
+      onError: (error) => {
         console.log(error);
       },
     });
@@ -62,22 +97,34 @@ function Content({ page }: ContentProp) {
           className="textarea border:none mb-5 text-4xl  font-bold placeholder:text-4xl placeholder:text-gray-300"
           placeholder="제목 없음"
           onChange={(e) => setTitle(e.target.value)}
-          value={page?.title}
+          defaultValue={page?.title}
+          // value={title}
         />
-
         <textarea
           id="message"
           className="textarea placeholder:text-m placeholder:text-gray-400"
           placeholder="'/'를 입력해 명령어를 사용하세요"
           onChange={(e) => setDesc(e.target.value)}
-          value={page?.desc}
+          defaultValue={page?.desc}
+          // value={desc}
         />
-        <button
-          className="rounded bg-blue-500 px-3 py-2 text-white"
-          onClick={handleAddPage}
-        >
-          생성
-        </button>
+        <div className="mt-10 w-2/3">
+          {page ? (
+            <button
+              className="rounded bg-green-500 px-3 py-2 text-white"
+              onClick={handleEditPage}
+            >
+              수정
+            </button>
+          ) : (
+            <button
+              className="mr-5 rounded bg-blue-500 px-3 py-2 text-white"
+              onClick={handleAddPage}
+            >
+              생성
+            </button>
+          )}
+        </div>
       </div>
     </>
   );

@@ -30,6 +30,19 @@ export const createNewPage = async (body: PageType) => {
   }
 };
 
+export const patchPage = async (body: PageType) => {
+  try {
+    const { data } = await axios.patch(
+      process.env.LOCAL_BASE_URL + 'myPage',
+      body,
+    );
+
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export const deletePage = async (id: string) => {
   try {
     const { data } = await axios.delete<PageType>(
