@@ -8,10 +8,18 @@ import Layout from '@/components/layout/Layout';
 
 const Page = () => {
   const router = useRouter();
-  const { id } = router.query;
+
+  const { pid } = router.query;
   const pages = useRecoilValue(pageList);
 
-  const target = pages.find((page) => page._id === id);
+  let originalId: string;
+
+  if (pid) {
+    const arr = (pid as string)?.split('-');
+    originalId = arr[arr.length - 1];
+  }
+
+  const target = pages.find((page) => page._id === originalId);
 
   return (
     <Layout>
