@@ -1,4 +1,5 @@
 import { AppProps } from 'next/app';
+import { SessionProvider } from 'next-auth/react';
 import { Suspense } from 'react';
 import { QueryClientProvider } from 'react-query';
 import { RecoilRoot } from 'recoil';
@@ -12,7 +13,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     <QueryClientProvider client={queryClient}>
       <RecoilRoot>
         <Suspense fallback={<div>Loading...</div>}>
-          <Component {...pageProps} />
+          <SessionProvider session={pageProps.session}>
+            <Component {...pageProps} />
+          </SessionProvider>
         </Suspense>
       </RecoilRoot>
     </QueryClientProvider>
