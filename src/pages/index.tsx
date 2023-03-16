@@ -1,5 +1,5 @@
 import { NextPageContext } from 'next';
-import { getProviders, getSession } from 'next-auth/react';
+import { getSession } from 'next-auth/react';
 import React from 'react';
 
 import useHomePage from '@/lib/hooks/useHomePage';
@@ -18,22 +18,27 @@ function HomePage() {
 }
 
 export async function getServerSideProps(context: NextPageContext) {
-  const { req, res } = context;
-  const session = await getSession({ req });
+  try {
+    const { req, res } = context;
+    const session = await getSession({ req });
 
-  if (!session && res) {
-    res.writeHead(302, {
-      Location: '/login',
-    });
-    res.end();
-    return;
+    if (!session && res) {
+      res.writeHead(302, {
+        Location: '/login',
+      });
+      res.end();
+      return { props: {} };
+    }
+
+    return { props: session };
+  } catch (error) {
+    return {
+      redirect: {
+        destination: '/login',
+        statusCode: 302,
+      },
+    };
   }
-
-  return {
-    props: {
-      providers: await getProviders(),
-    },
-  };
 }
 
 export default HomePage;
