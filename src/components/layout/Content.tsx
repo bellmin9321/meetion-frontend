@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
@@ -11,6 +12,7 @@ import { changeParam } from '@/lib/service';
 import ContentHeader from './ContentHeader';
 
 import { PageType } from '@/types';
+import { queryKeys } from '@/types/commonType';
 
 interface ContentProp {
   page?: PageType;
@@ -24,14 +26,17 @@ function Content({ page }: ContentProp) {
   const debouncedDesc = useDebounce({ value: desc, delay: 500 });
   const { addPage, editPage } = usePageMutation();
   const router = useRouter();
+  const { data: session } = useSession();
 
   useEffect(() => {
-    setNewPage({
-      ...newPage,
-      creator: 'd@gmail.com',
-      title: debouncedTitle,
-      desc: debouncedDesc,
-    });
+    if (session) {
+      setNewPage({
+        ...newPage,
+        creator: session.user.email,
+        title: debouncedTitle,
+        desc: debouncedDesc,
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedTitle, debouncedDesc]);
 
@@ -46,7 +51,7 @@ function Content({ page }: ContentProp) {
 
     addPageMutate(newPage, {
       onSuccess: () => {
-        queryClient.invalidateQueries('pages');
+        queryClient.invalidateQueries(queryKeys.pages);
         router.push(`/`);
         setTitle('');
         setDesc('');
@@ -79,7 +84,7 @@ function Content({ page }: ContentProp) {
         router.push(
           `/page/${changeParam(updatedPage.title)}${updatedPage._id}`,
         );
-        queryClient.invalidateQueries('pages');
+        queryClient.invalidateQueries(queryKeys.pages);
       },
       onError: (error) => {
         console.log(error);
