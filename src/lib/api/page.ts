@@ -2,9 +2,11 @@ import axios from 'axios';
 
 import { PageType } from '@/types';
 
-export const getPageList = async () => {
+export const getPageList = async (email: string) => {
   try {
-    const { data } = await axios.get(process.env.LOCAL_BASE_URL + 'myPage');
+    const { data } = await axios.get(process.env.LOCAL_BASE_URL + 'myPage', {
+      params: { email },
+    });
 
     return data.pages;
   } catch (err) {
