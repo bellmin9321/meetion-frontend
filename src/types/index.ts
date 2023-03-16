@@ -10,3 +10,34 @@ export interface UserType {
   image: string;
   name: string;
 }
+
+export interface LoginProp {
+  google: {
+    callbackUrl: string;
+    id: string;
+    name: string;
+    signinUrl: string;
+    type: string;
+  };
+  github: {
+    callbackUrl: string;
+    id: string;
+    name: string;
+    signinUrl: string;
+    type: string;
+  };
+  kakao: {
+    callbackUrl: string;
+    id: string;
+    name: string;
+    signinUrl: string;
+    type: string;
+  };
+  naver: {
+    callbackUrl: string;
+    id: string;
+    name: string;
+    signinUrl: string;
+    type: string;
+  };
+}
