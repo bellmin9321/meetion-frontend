@@ -10,15 +10,15 @@ import { queryClient } from '@/lib/api/queryClient';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <QueryClientProvider client={queryClient}>
-      <RecoilRoot>
-        <Suspense fallback={<div>Loading...</div>}>
-          <SessionProvider session={pageProps.session}>
+    <SessionProvider session={pageProps.session}>
+      <QueryClientProvider client={queryClient}>
+        <RecoilRoot>
+          <Suspense fallback={<div>Loading...</div>}>
             <Component {...pageProps} />
-          </SessionProvider>
-        </Suspense>
-      </RecoilRoot>
-    </QueryClientProvider>
+          </Suspense>
+        </RecoilRoot>
+      </QueryClientProvider>
+    </SessionProvider>
   );
 }
 
