@@ -61,22 +61,31 @@ function Login({ providers }: { providers: LoginProp }) {
 }
 
 export async function getServerSideProps(context: NextPageContext) {
-  const { req, res } = context;
-  const session = await getSession({ req });
+  try {
+    const { req, res } = context;
+    const session = await getSession({ req });
 
-  if (session && res && session.user) {
-    res.writeHead(302, {
-      Location: '/',
-    });
-    res.end();
-    return;
+    if (session && res && session.user) {
+      res.writeHead(302, {
+        Location: '/',
+      });
+      res.end();
+      return { props: {} };
+    }
+
+    return {
+      props: {
+        providers: await getProviders(),
+      },
+    };
+  } catch (error) {
+    return {
+      redirect: {
+        destination: '/login',
+        statusCode: 302,
+      },
+    };
   }
-
-  return {
-    props: {
-      providers: await getProviders(),
-    },
-  };
 }
 
 export default Login;
