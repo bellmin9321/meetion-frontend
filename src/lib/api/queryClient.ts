@@ -5,7 +5,9 @@ export const queryClient = new QueryClient({
     queries: {
       retry: 0,
       staleTime: 60000,
-      // suspense: true,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
     },
   },
   queryCache: new QueryCache({
@@ -15,8 +17,5 @@ export const queryClient = new QueryClient({
         console.log('Error: ', error);
       }
     },
-    // onSuccess: (data) => {
-    //   console.log(data);
-    // },
   }),
 });
