@@ -1,34 +1,27 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { AiFillDelete, AiOutlineRight } from 'react-icons/ai';
-import { useQuery } from 'react-query';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 
-import { getPageList } from '@/lib/api/page';
 import { queryClient } from '@/lib/api/queryClient';
 import usePageMutation from '@/lib/hooks/usePageMutation';
 import { pageList } from '@/lib/recoil';
 import { changeParam } from '@/lib/service';
 
 import { PageType } from '@/types';
+import { queryKeys } from '@/types/commonType';
 
 function MyPage() {
-  const { data } = useQuery('pages', getPageList);
-  const setPageList = useSetRecoilState(pageList);
+  const router = useRouter();
+  const pages = useRecoilValue(pageList);
   const { removePage } = usePageMutation();
   const { mutate: deletePageMutate } = removePage;
-  const router = useRouter();
-
-  useEffect(() => {
-    setPageList(data);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const handleDelete = (id?: string) => {
     deletePageMutate(id ?? '', {
       onSuccess: () => {
-        queryClient.invalidateQueries('pages');
+        queryClient.invalidateQueries(queryKeys.pages);
         router.push('/');
       },
       onError: (error) => {
@@ -41,8 +34,8 @@ function MyPage() {
     <>
       <div className="ml-4 mb-2 text-sm text-gray-500">개인 페이지</div>
       <ul>
-        {data?.length > 0 &&
-          data.map((page: PageType) => {
+        {pages?.length > 0 &&
+          pages.map((page: PageType) => {
             return (
               <div
                 key={page._id}
