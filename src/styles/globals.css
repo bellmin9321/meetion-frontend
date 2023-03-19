@@ -97,6 +97,10 @@
   .loginBtn {
     @apply flex h-10 items-center justify-center rounded border-[1px] border-gray-300 shadow hover:opacity-60 mb-3
   }
+
+  .selectedList {
+    @apply bg-gray-200
+  }
 }
 
 @layer utilities {
