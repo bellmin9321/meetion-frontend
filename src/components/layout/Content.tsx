@@ -1,13 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 import { queryClient } from '@/lib/api/queryClient';
 import useDebounce from '@/lib/hooks/useDebounce';
 import usePageMutation from '@/lib/hooks/usePageMutation';
-import { pageState } from '@/lib/recoil';
-import { changeParam } from '@/lib/service';
+import { newPageState, userState } from '@/lib/recoil';
 
 import ContentHeader from './ContentHeader';
 
@@ -19,25 +18,29 @@ interface ContentProp {
 }
 
 function Content({ page }: ContentProp) {
-  const [newPage, setNewPage] = useRecoilState(pageState);
+  const [newPage, setNewPage] = useRecoilState(newPageState);
+  const { email } = useRecoilValue(userState);
   const [title, setTitle] = useState<string>('');
-  const [desc, setDesc] = useState<string>('');
+  const [desc, setDesc] = useState<string | undefined>('');
   const debouncedTitle = useDebounce({ value: title, delay: 500 });
   const debouncedDesc = useDebounce({ value: desc, delay: 500 });
   const { addPage, editPage } = usePageMutation();
   const router = useRouter();
-  const { data: session } = useSession();
 
   useEffect(() => {
-    if (session) {
-      setNewPage({
-        ...newPage,
-        creator: session.user.email,
-        title: debouncedTitle,
-        desc: debouncedDesc,
-      });
+    if (page) {
+      setTitle(page.title);
+      setDesc(page.desc);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
+
+  useEffect(() => {
+    setNewPage({
+      ...newPage,
+      creator: email,
+      title: debouncedTitle,
+      desc: debouncedDesc,
+    });
   }, [debouncedTitle, debouncedDesc]);
 
   const { mutate: addPageMutate } = addPage;
@@ -50,11 +53,11 @@ function Content({ page }: ContentProp) {
     }
 
     addPageMutate(newPage, {
-      onSuccess: () => {
+      onSuccess: (data) => {
         queryClient.invalidateQueries(queryKeys.pages);
-        router.push(`/`);
-        setTitle('');
-        setDesc('');
+        if (data) {
+          router.push(`/page/${data._id}`);
+        }
       },
       onError: (error) => {
         console.log(error);
@@ -63,28 +66,22 @@ function Content({ page }: ContentProp) {
   };
 
   const handleEditPage = () => {
-    if (!title && !page?.title) {
-      alert('제목을 입력해주세요');
+    if (!title) {
       return;
-    }
-
-    if (page?.title === title && page?.desc === desc) {
-      alert('수정된 글자가 없습니다.');
     }
 
     const updatedPage = {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       ...page!,
-      title: debouncedTitle,
-      desc: debouncedDesc,
+      title,
+      desc,
     };
+    setNewPage(updatedPage);
 
     editPageMutate(updatedPage, {
-      onSuccess: () => {
-        router.push(
-          `/page/${changeParam(updatedPage.title)}${updatedPage._id}`,
-        );
+      onSuccess: (data) => {
         queryClient.invalidateQueries(queryKeys.pages);
+        router.push(`/page/${data._id}`);
       },
       onError: (error) => {
         console.log(error);
@@ -96,21 +93,19 @@ function Content({ page }: ContentProp) {
     <>
       <ContentHeader />
       <div className="flex flex-col items-center p-4 sm:ml-64">
-        <textarea
+        <input
           id="message"
           className="textarea border:none mb-5 text-4xl  font-bold placeholder:text-4xl placeholder:text-gray-300"
           placeholder="제목 없음"
           onChange={(e) => setTitle(e.target.value)}
-          defaultValue={page?.title}
-          // value={title}
+          value={title}
         />
-        <textarea
+        <input
           id="message"
           className="textarea placeholder:text-m placeholder:text-gray-400"
           placeholder="'/'를 입력해 명령어를 사용하세요"
           onChange={(e) => setDesc(e.target.value)}
-          defaultValue={page?.desc}
-          // value={desc}
+          value={desc}
         />
         <div className="mt-10 w-2/3">
           {page ? (
