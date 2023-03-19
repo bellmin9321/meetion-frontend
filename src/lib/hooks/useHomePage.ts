@@ -4,14 +4,14 @@ import { useSetRecoilState } from 'recoil';
 
 import useUserMutation from './useUserMutation';
 import { getPageList } from '../api/page';
-import { pageList, userState } from '../recoil';
+import { pageListState, userState } from '../recoil';
 
 import { queryKeys } from '@/types/commonType';
 
 function useHomePage() {
   const { data: session } = useSession();
   const setUser = useSetRecoilState(userState);
-  const setPages = useSetRecoilState(pageList);
+  const setPages = useSetRecoilState(pageListState);
   const { addUser } = useUserMutation();
 
   const { mutate: addUserMutate } = addUser;
