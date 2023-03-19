@@ -12,7 +12,7 @@ function HomePage() {
 
   return (
     <Layout>
-      <Content page={undefined} />
+      <Content />
     </Layout>
   );
 }

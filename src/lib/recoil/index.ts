@@ -11,12 +11,15 @@ import { PageType, UserType } from '@/types';
 export const LoginProperties = [
   { icon: FcGoogle, style: '' },
   { icon: AiFillGithub, style: 'bg-gray-800 text-white' },
-  { icon: RiKakaoTalkFill, style: 'bg-yellow-300' },
+  {
+    icon: RiKakaoTalkFill,
+    style: 'bg-yellow-300',
+  },
   { icon: SiNaver, style: 'bg-green-500 text-white' },
 ];
 
-export const pageState = atom<PageType>({
-  key: 'page',
+export const newPageState = atom<PageType>({
+  key: 'newPage',
   default: {
     _id: '',
     creator: '',
@@ -25,7 +28,7 @@ export const pageState = atom<PageType>({
   },
 });
 
-export const pageList = atom<PageType[]>({
+export const pageListState = atom<PageType[]>({
   key: 'pageList',
   default: [],
 });
