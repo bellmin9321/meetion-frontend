@@ -7,7 +7,7 @@ import { useRecoilValue } from 'recoil';
 import { queryClient } from '@/lib/api/queryClient';
 import usePageMutation from '@/lib/hooks/usePageMutation';
 import { pageListState } from '@/lib/recoil';
-import { changeParam } from '@/lib/service';
+import { changeParam } from '@/lib/util';
 
 import { PageType } from '@/types';
 import { queryKeys } from '@/types/commonType';
