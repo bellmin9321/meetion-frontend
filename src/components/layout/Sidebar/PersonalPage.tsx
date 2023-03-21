@@ -7,7 +7,7 @@ import { useRecoilValue } from 'recoil';
 import { queryClient } from '@/lib/api/queryClient';
 import usePageMutation from '@/lib/hooks/usePageMutation';
 import { pageListState } from '@/lib/recoil';
-import { changeParam } from '@/lib/util';
+import { changeParam, textLengthOverCut } from '@/lib/util';
 
 import { PageType } from '@/types';
 import { queryKeys } from '@/types/commonType';
@@ -59,7 +59,9 @@ function PersonalPage() {
                       <AiOutlineRight className="text-sm  text-gray-600" />
                     </span>
                     <li className="ml-2 text-gray-700">
-                      {page?.title ? page?.title : '제목 없음'}
+                      {page?.title
+                        ? textLengthOverCut(page?.title)
+                        : '제목 없음'}
                     </li>
                   </div>
                   <div className="flex items-center">
