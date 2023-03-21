@@ -90,32 +90,36 @@ function Content({ page }: ContentProp) {
 
   return (
     <>
-      <ContentHeader />
-      <div className="flex flex-col items-center p-4 sm:ml-64">
-        <input
-          id="message"
-          className="textarea border:none mb-5 text-4xl  font-bold placeholder:text-4xl placeholder:text-gray-300"
-          placeholder="제목 없음"
-          onChange={(e) => setTitle(e.target.value)}
-          value={title}
-          ref={inputRef}
-        />
-        <input
-          id="message"
-          className="textarea placeholder:text-m placeholder:text-gray-400"
-          placeholder="'/'를 입력해 명령어를 사용하세요"
-          onChange={(e) => setDesc(e.target.value)}
-          value={desc}
-        />
-        <div className="mt-10 w-2/3">
-          {!page && (
-            <button
-              className="mr-5 rounded bg-blue-500 px-3 py-2 text-white"
-              onClick={handleAddPage}
-            >
-              생성
-            </button>
-          )}
+      <ContentHeader title={title} />
+      <div className="flex h-screen flex-col items-center sm:ml-64">
+        <div className="flex h-1/3 w-full items-end justify-center ">
+          <input
+            id="message"
+            className="contentInput border:none text-4xl font-bold placeholder:text-4xl placeholder:text-gray-300"
+            placeholder="제목 없음"
+            onChange={(e) => setTitle(e.target.value)}
+            value={title}
+            ref={inputRef}
+          />
+        </div>
+        <div className="flex h-2/3 w-full flex-col items-center">
+          <input
+            id="message"
+            className="contentInput placeholder:text-m justify-center placeholder:text-gray-400"
+            placeholder="'/'를 입력해 명령어를 사용하세요"
+            onChange={(e) => setDesc(e.target.value)}
+            value={desc}
+          />
+          <div className="mt-10 w-2/3">
+            {!page && (
+              <button
+                className="mr-5 rounded bg-blue-500 px-3 py-2 text-white"
+                onClick={handleAddPage}
+              >
+                생성
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </>
