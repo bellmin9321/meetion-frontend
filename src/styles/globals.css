@@ -99,7 +99,7 @@
   }
 
   .selectedList {
-    @apply bg-gray-200
+    @apply bg-gray-200 font-bold text-gray-800
   }
 }
 
