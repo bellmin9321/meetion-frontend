@@ -1,15 +1,15 @@
 import React from 'react';
 
-import MyPage from './MyPage';
 import NewPage from './NewPageButton';
 import Options from './Options';
+import PersonalPage from './PersonalPage';
 import SidebarLayout from './SidebarLayout';
 
 function Sidebar() {
   return (
     <SidebarLayout>
       <Options />
-      <MyPage />
+      <PersonalPage />
       <NewPage />
     </SidebarLayout>
   );
