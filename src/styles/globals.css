@@ -86,8 +86,8 @@
     @apply h-5 w-5 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white
   }
 
-  .textarea {
-    @apply h-[60px] w-4/5 border-none text-gray-900  resize-none shadow-none focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400
+  .contentInput {
+    @apply h-[60px] w-4/5 border-none text-gray-900 resize-none shadow-none focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400
   }
 
   .toolList {
