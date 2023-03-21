@@ -12,7 +12,7 @@ import { changeParam } from '@/lib/util';
 import { PageType } from '@/types';
 import { queryKeys } from '@/types/commonType';
 
-function MyPage() {
+function PersonalPage() {
   const router = useRouter();
   const pages = useRecoilValue(pageListState);
   const { removePage } = usePageMutation();
@@ -22,8 +22,10 @@ function MyPage() {
   const handleDelete = (id?: string) => {
     deletePageMutate(id ?? '', {
       onSuccess: () => {
+        const { _id, title } = pages[0];
+
         queryClient.invalidateQueries(queryKeys.pages);
-        router.push('/');
+        router.push(`/page/${changeParam(title)}${_id}`);
       },
       onError: (error) => {
         console.log(error);
@@ -56,7 +58,9 @@ function MyPage() {
                     <span>
                       <AiOutlineRight className="text-sm  text-gray-600" />
                     </span>
-                    <li className="ml-2 text-gray-600">{page?.title}</li>
+                    <li className="ml-2 text-gray-700">
+                      {page?.title ? page?.title : '제목 없음'}
+                    </li>
                   </div>
                   <div className="flex items-center">
                     <AiFillDelete
@@ -73,4 +77,4 @@ function MyPage() {
   );
 }
 
-export default MyPage;
+export default PersonalPage;
