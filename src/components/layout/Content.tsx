@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { queryClient } from '@/lib/api/queryClient';
@@ -30,9 +30,10 @@ function Content({ page }: ContentProp) {
   const { addPage } = usePageMutation();
   const router = useRouter();
 
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const updatedPage = {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    ...page!,
+    ...page,
     title,
     desc,
   };
@@ -41,6 +42,10 @@ function Content({ page }: ContentProp) {
     if (page) {
       setTitle(page.title);
       setDesc(page.desc);
+
+      if (page.title === '' && inputRef.current) {
+        inputRef.current.focus();
+      }
     }
   }, [page]);
 
@@ -57,7 +62,7 @@ function Content({ page }: ContentProp) {
     if (socket === null) return;
 
     socket.emit('get-page', updatedPage);
-    socket.on('save-page', ({ pages }) => {
+    socket.on('edit-page', ({ pages }) => {
       pages.length && setPages(pages);
     });
   }, [debouncedTitle, debouncedDesc]);
@@ -93,6 +98,7 @@ function Content({ page }: ContentProp) {
           placeholder="제목 없음"
           onChange={(e) => setTitle(e.target.value)}
           value={title}
+          ref={inputRef}
         />
         <input
           id="message"
