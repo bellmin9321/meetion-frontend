@@ -21,12 +21,12 @@ function NewPageButton() {
     desc: '',
   };
 
-  const handleClick = () => {
+  const createNewPage = () => {
     addPageMutate(page, {
       onSuccess: (data) => {
-        queryClient.invalidateQueries(queryKeys.pages);
         if (data) {
           router.push(`/page/${data._id}`);
+          queryClient.invalidateQueries(queryKeys.pages);
         }
       },
       onError: (error) => {
@@ -38,7 +38,7 @@ function NewPageButton() {
   return (
     <div
       className="fixed bottom-0 flex w-full cursor-pointer border-t-[1px] py-4 hover:bg-gray-200"
-      onClick={handleClick}
+      onClick={createNewPage}
     >
       <span className="ml-4">
         <BiPlus className="mr-3 h-6 w-6 text-gray-500" />
