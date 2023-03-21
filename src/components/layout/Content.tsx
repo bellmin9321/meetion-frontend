@@ -1,12 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { queryClient } from '@/lib/api/queryClient';
 import useDebounce from '@/lib/hooks/useDebounce';
 import usePageMutation from '@/lib/hooks/usePageMutation';
-import { newPageState, userState } from '@/lib/recoil';
+import { newPageState, pageListState, userState } from '@/lib/recoil';
+import socket from '@/lib/util/socket';
 
 import ContentHeader from './ContentHeader';
 
@@ -19,13 +20,22 @@ interface ContentProp {
 
 function Content({ page }: ContentProp) {
   const [newPage, setNewPage] = useRecoilState(newPageState);
+
+  const setPages = useSetRecoilState(pageListState);
   const { email } = useRecoilValue(userState);
   const [title, setTitle] = useState<string>('');
   const [desc, setDesc] = useState<string | undefined>('');
   const debouncedTitle = useDebounce({ value: title, delay: 500 });
   const debouncedDesc = useDebounce({ value: desc, delay: 500 });
-  const { addPage, editPage } = usePageMutation();
+  const { addPage } = usePageMutation();
   const router = useRouter();
+
+  const updatedPage = {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    ...page!,
+    title,
+    desc,
+  };
 
   useEffect(() => {
     if (page) {
@@ -43,8 +53,16 @@ function Content({ page }: ContentProp) {
     });
   }, [debouncedTitle, debouncedDesc]);
 
+  useEffect(() => {
+    if (socket === null) return;
+
+    socket.emit('get-page', updatedPage);
+    socket.on('save-page', ({ pages }) => {
+      pages.length && setPages(pages);
+    });
+  }, [debouncedTitle, debouncedDesc]);
+
   const { mutate: addPageMutate } = addPage;
-  const { mutate: editPageMutate } = editPage;
 
   const handleAddPage = () => {
     if (!title) {
@@ -58,30 +76,6 @@ function Content({ page }: ContentProp) {
         if (data) {
           router.push(`/page/${data._id}`);
         }
-      },
-      onError: (error) => {
-        console.log(error);
-      },
-    });
-  };
-
-  const handleEditPage = () => {
-    if (!title) {
-      return;
-    }
-
-    const updatedPage = {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      ...page!,
-      title,
-      desc,
-    };
-    setNewPage(updatedPage);
-
-    editPageMutate(updatedPage, {
-      onSuccess: (data) => {
-        queryClient.invalidateQueries(queryKeys.pages);
-        router.push(`/page/${data._id}`);
       },
       onError: (error) => {
         console.log(error);
@@ -108,14 +102,7 @@ function Content({ page }: ContentProp) {
           value={desc}
         />
         <div className="mt-10 w-2/3">
-          {page ? (
-            <button
-              className="rounded bg-green-500 px-3 py-2 text-white"
-              onClick={handleEditPage}
-            >
-              수정
-            </button>
-          ) : (
+          {!page && (
             <button
               className="mr-5 rounded bg-blue-500 px-3 py-2 text-white"
               onClick={handleAddPage}
