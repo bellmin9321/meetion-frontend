@@ -9,7 +9,7 @@ import { pageListState } from '@/lib/recoil';
 import Content from '@/components/layout/Content';
 import Layout from '@/components/layout/Layout';
 
-const Page = () => {
+function Page() {
   useHomePage();
   const router = useRouter();
 
@@ -30,7 +30,7 @@ const Page = () => {
       <Content page={page} />
     </Layout>
   );
-};
+}
 
 export async function getServerSideProps(context: NextPageContext) {
   try {
