@@ -3,8 +3,8 @@ import { useQuery } from 'react-query';
 import { useSetRecoilState } from 'recoil';
 
 import useUserMutation from './useUserMutation';
-import { getPageList } from '../api/page';
-import { pageListState, userState } from '../recoil';
+import { getPageList, getSharedPages } from '../api/page';
+import { pageListState, sharedPagesState, userState } from '../recoil';
 
 import { queryKeys } from '@/types/commonType';
 
@@ -12,17 +12,24 @@ function useHomePage() {
   const { data: session } = useSession();
   const setUser = useSetRecoilState(userState);
   const setPages = useSetRecoilState(pageListState);
+  const setSharedPages = useSetRecoilState(sharedPagesState);
   const { addUser } = useUserMutation();
 
   const { mutate: addUserMutate } = addUser;
-  useQuery([...queryKeys.pages, session], async () => {
-    if (session) {
-      const data = await getPageList(session.user.email);
-      setUser(session.user);
-      addUserMutate(session.user);
-      setPages(data);
-    }
-  });
+  useQuery(
+    [...queryKeys.pages, ...queryKeys.sharedPages, session],
+    async () => {
+      if (session) {
+        setUser(session.user);
+        addUserMutate(session.user);
+        const shared = await getSharedPages(session.user.email);
+        setSharedPages(shared);
+
+        const pages = await getPageList(session.user.email);
+        setPages(pages);
+      }
+    },
+  );
 }
 
 export default useHomePage;

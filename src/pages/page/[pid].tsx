@@ -4,7 +4,7 @@ import { getSession } from 'next-auth/react';
 import { useRecoilValue } from 'recoil';
 
 import useHomePage from '@/lib/hooks/useHomePage';
-import { pageListState } from '@/lib/recoil';
+import { pageListState, sharedPagesState } from '@/lib/recoil';
 
 import Content from '@/components/layout/Content';
 import Layout from '@/components/layout/Layout';
@@ -15,6 +15,7 @@ function Page() {
 
   const { pid } = router.query;
   const pages = useRecoilValue(pageListState);
+  const sharedPages = useRecoilValue(sharedPagesState);
 
   let originalId: string;
 
@@ -22,12 +23,12 @@ function Page() {
     const arr = (pid as string)?.split('-');
     originalId = arr[arr.length - 1];
   }
-
   const page = pages.find((page) => page._id === originalId);
+  const sharedPage = sharedPages.find((page) => page._id === originalId);
 
   return (
     <Layout>
-      <Content page={page} />
+      <Content page={page} sharedPage={sharedPage} />
     </Layout>
   );
 }

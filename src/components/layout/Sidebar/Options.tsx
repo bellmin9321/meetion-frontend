@@ -17,7 +17,7 @@ function Options() {
   ];
 
   return (
-    <ul className="mb-8 space-y-1">
+    <ul className="mb-6 space-y-1">
       {categories.map((category: CategoryType, index: number) => {
         return <List key={index} category={category} />;
       })}
