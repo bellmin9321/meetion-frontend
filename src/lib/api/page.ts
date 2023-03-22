@@ -14,6 +14,21 @@ export const getPageList = async (email: string) => {
   }
 };
 
+export const getSharedPages = async (email: string) => {
+  try {
+    const { data } = await axios.get(
+      process.env.LOCAL_BASE_URL + 'myPage/shared',
+      {
+        params: { email },
+      },
+    );
+
+    return data.sharedPages;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export const createNewPage = async (body: PageType) => {
   try {
     const headers = {
