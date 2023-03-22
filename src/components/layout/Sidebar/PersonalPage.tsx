@@ -1,12 +1,12 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React from 'react';
 import { AiFillDelete, AiOutlineRight } from 'react-icons/ai';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 import { queryClient } from '@/lib/api/queryClient';
 import usePageMutation from '@/lib/hooks/usePageMutation';
-import { pageListState } from '@/lib/recoil';
+import { pageListState, selectedPageID } from '@/lib/recoil';
 import { changeParam, textLengthOverCut } from '@/lib/util';
 
 import { PageType } from '@/types';
@@ -17,7 +17,7 @@ function PersonalPage() {
   const pages = useRecoilValue(pageListState);
   const { removePage } = usePageMutation();
   const { mutate: deletePageMutate } = removePage;
-  const [selectedId, setSelected] = useState<string | undefined>('');
+  const [selectedId, setSelected] = useRecoilState(selectedPageID);
 
   const handleDelete = (id?: string) => {
     deletePageMutate(id ?? '', {
@@ -37,7 +37,7 @@ function PersonalPage() {
     selectedId === id ? 'selectedList' : '';
 
   return (
-    <>
+    <div className="mb-6">
       <div className="ml-4 mb-2 text-sm text-gray-500">개인 페이지</div>
       <ul>
         {pages?.length > 0 &&
@@ -75,7 +75,7 @@ function PersonalPage() {
             );
           })}
       </ul>
-    </>
+    </div>
   );
 }
 
