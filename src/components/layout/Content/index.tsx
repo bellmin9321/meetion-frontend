@@ -16,9 +16,10 @@ import { queryKeys } from '@/types/commonType';
 
 interface ContentProp {
   page?: PageType;
+  sharedPage?: PageType;
 }
 
-function Content({ page }: ContentProp) {
+function Content({ page, sharedPage }: ContentProp) {
   const [newPage, setNewPage] = useRecoilState(newPageState);
 
   const setPages = useSetRecoilState(pageListState);
@@ -38,6 +39,7 @@ function Content({ page }: ContentProp) {
     desc,
   };
 
+  // Sidebar Page 선택 시 default title, desc 설정
   useEffect(() => {
     if (page) {
       setTitle(page.title);
@@ -46,6 +48,9 @@ function Content({ page }: ContentProp) {
       if (page.title === '' && inputRef.current) {
         inputRef.current.focus();
       }
+    } else if (sharedPage) {
+      setTitle(sharedPage.title);
+      setDesc(sharedPage.desc);
     }
   }, [page]);
 
@@ -111,7 +116,7 @@ function Content({ page }: ContentProp) {
             value={desc}
           />
           <div className="mt-10 w-2/3">
-            {!page && (
+            {!page && !sharedPage && (
               <button
                 className="mr-5 rounded bg-blue-500 px-3 py-2 text-white"
                 onClick={handleAddPage}

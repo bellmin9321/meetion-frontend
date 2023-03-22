@@ -19,6 +19,7 @@ function NewPageButton() {
     creator: email,
     title: '',
     desc: '',
+    sharedUsers: [],
   };
 
   const createNewPage = () => {
