@@ -33,6 +33,11 @@ export const pageListState = atom<PageType[]>({
   default: [],
 });
 
+export const sharedPagesState = atom<PageType[]>({
+  key: 'sharedPages',
+  default: [],
+});
+
 export const userState = atom<UserType>({
   key: 'user',
   default: {
@@ -40,4 +45,9 @@ export const userState = atom<UserType>({
     image: '',
     name: '',
   },
+});
+
+export const selectedPageID = atom<string | undefined>({
+  key: 'pageID',
+  default: '',
 });
