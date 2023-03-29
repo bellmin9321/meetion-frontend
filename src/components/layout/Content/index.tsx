@@ -91,7 +91,7 @@ function Content({ page, sharedPage }: ContentProp) {
         inputRef.current.focus();
       }
     }
-  }, [page]);
+  }, [page, sharedPage]);
 
   useEffect(() => {
     setNewPage({
@@ -115,18 +115,22 @@ function Content({ page, sharedPage }: ContentProp) {
 
     socket.emit('get-page', updatedPage);
     socket.on('edit-page', ({ pages }) => {
-      const p = pages.find((p: PageType) => p._id === updatedPage._id);
-
-      p && pages.length && setPages(pages);
+      const notSharedPages = pages.filter(
+        (page: PageType) => page.sharedUsers && !page.sharedUsers.length,
+      );
+      setPages(notSharedPages);
     });
 
-    socket.emit('shared-page', updatedSharedPage);
-    socket.on('receive-changes', ({ _id, title, desc }) => {
-      if (sharedPage?._id === _id) {
-        title && setTitle(title);
-        desc && setDesc(desc);
-      }
-    });
+    // 공유되지 않은 페이지는 텍스트를 공유하지 않도록 조건 추가
+    if (sharedPage) {
+      socket.emit('shared-page', updatedSharedPage);
+      socket.on('receive-changes', ({ _id, title, desc }) => {
+        if (sharedPage?._id === _id) {
+          title && setTitle(title);
+          desc && setDesc(desc);
+        }
+      });
+    }
 
     return () => {
       socket.off('edit-page');
@@ -136,12 +140,14 @@ function Content({ page, sharedPage }: ContentProp) {
 
   // 공유 유저 실시간 cursor 위치에 따라 profile 이동
   useEffect(() => {
-    if (socket === null) return;
+    if (socket === null || !sharedPage) return;
 
-    const guestInfo = { image, email, posY: y };
+    const guestInfo = { id: sharedPage._id, image, email, posY: y };
 
     socket.emit('get-position', guestInfo);
     socket.on('pos-changes', (guest) => {
+      if (sharedPage._id !== guest.id) return;
+
       setGuest(guest);
       setY(guest.posY);
       setProfile(guest.image);
@@ -194,7 +200,7 @@ function Content({ page, sharedPage }: ContentProp) {
       <ContentHeader title={title} />
       <div className="flex h-screen flex-col items-center sm:ml-64">
         {/* 본인 계정은 프로필이 보이면 안됨 */}
-        {profile && sharedPage && (
+        {sharedPage && profile && (
           <Image
             src={profile}
             alt="profile"
