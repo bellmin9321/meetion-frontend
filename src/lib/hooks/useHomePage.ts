@@ -37,7 +37,7 @@ function useHomePage() {
         );
 
         setSharedPages(sharedPages.concat(sharedMyPages));
-        setPages(myPages);
+        setPages(notSharedPages);
       }
     },
   );
