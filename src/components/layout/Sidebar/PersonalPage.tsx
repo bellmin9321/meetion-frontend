@@ -25,16 +25,15 @@ function PersonalPage() {
         const { _id, title } = pages[0];
 
         queryClient.invalidateQueries(queryKeys.pages);
-        router.push(`/page/${changeParam(title)}${_id}`);
+        router.push(`/page/${changeParam(title)}${_id}`, undefined, {
+          shallow: true,
+        });
       },
       onError: (error) => {
         console.log(error);
       },
     });
   };
-
-  const getSelectedClass = (id?: string) =>
-    selectedId === id ? 'selectedList' : '';
 
   return (
     <div className="mb-6">
@@ -45,9 +44,9 @@ function PersonalPage() {
             return (
               <div
                 key={page._id}
-                className={`flex justify-between py-1 pl-4 hover:bg-gray-200 ${getSelectedClass(
-                  page?._id,
-                )}`}
+                className={`flex justify-between py-1 pl-4 hover:bg-gray-200 ${
+                  page._id === selectedId ? 'selectedList' : ''
+                }`}
               >
                 <Link
                   href={`/page/${changeParam(page.title)}${page._id}`}
