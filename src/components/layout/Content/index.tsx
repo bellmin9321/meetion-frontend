@@ -1,13 +1,28 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import Image from 'next/image';
 import { useRouter } from 'next/router';
-import React, { useEffect, useRef, useState } from 'react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import React, {
+  ChangeEvent,
+  MouseEvent,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { io, Socket } from 'socket.io-client';
 
 import { queryClient } from '@/lib/api/queryClient';
 import useDebounce from '@/lib/hooks/useDebounce';
 import usePageMutation from '@/lib/hooks/usePageMutation';
-import { newPageState, pageListState, userState } from '@/lib/recoil';
-import socket from '@/lib/util/socket';
+import {
+  newPageState,
+  pageListState,
+  shareModalState,
+  userState,
+} from '@/lib/recoil';
+
+import Modal from '@/components/Modal';
+import ShareModal from '@/components/Modal/ShareModal';
 
 import ContentHeader from './ContentHeader';
 
@@ -19,13 +34,30 @@ interface ContentProp {
   sharedPage?: PageType;
 }
 
+interface GuestType {
+  image?: string;
+  email?: string;
+  posY: string;
+}
+
 function Content({ page, sharedPage }: ContentProp) {
   const [newPage, setNewPage] = useRecoilState(newPageState);
 
-  const setPages = useSetRecoilState(pageListState);
-  const { email } = useRecoilValue(userState);
+  const [pages, setPages] = useRecoilState(pageListState);
+  const { email, image } = useRecoilValue(userState);
+  const isModal = useRecoilValue(shareModalState);
+
   const [title, setTitle] = useState<string>('');
   const [desc, setDesc] = useState<string | undefined>('');
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const [guest, setGuest] = useState<GuestType>({
+    image: '',
+    email: '',
+    posY: '',
+  });
+  const [profile, setProfile] = useState<string>('');
+  const [y, setY] = useState<string>('');
+
   const debouncedTitle = useDebounce({ value: title, delay: 500 });
   const debouncedDesc = useDebounce({ value: desc, delay: 500 });
   const { addPage } = usePageMutation();
@@ -35,22 +67,29 @@ function Content({ page, sharedPage }: ContentProp) {
 
   const updatedPage = {
     ...page,
+    creator: email,
+    title,
+    desc,
+  };
+
+  const updatedSharedPage = {
+    ...sharedPage,
     title,
     desc,
   };
 
   // Sidebar Page 선택 시 default title, desc 설정
   useEffect(() => {
-    if (page) {
+    if (sharedPage) {
+      setTitle(sharedPage.title);
+      setDesc(sharedPage.desc);
+    } else if (page && page.creator && email) {
       setTitle(page.title);
       setDesc(page.desc);
 
       if (page.title === '' && inputRef.current) {
         inputRef.current.focus();
       }
-    } else if (sharedPage) {
-      setTitle(sharedPage.title);
-      setDesc(sharedPage.desc);
     }
   }, [page]);
 
@@ -64,13 +103,54 @@ function Content({ page, sharedPage }: ContentProp) {
   }, [debouncedTitle, debouncedDesc]);
 
   useEffect(() => {
+    setSocket(io(process.env.LOCAL_BASE_URL as string));
+
+    return () => {
+      socket?.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
     if (socket === null) return;
 
     socket.emit('get-page', updatedPage);
     socket.on('edit-page', ({ pages }) => {
-      pages.length && setPages(pages);
+      const p = pages.find((p: PageType) => p._id === updatedPage._id);
+
+      p && pages.length && setPages(pages);
     });
+
+    socket.emit('shared-page', updatedSharedPage);
+    socket.on('receive-changes', ({ _id, title, desc }) => {
+      if (sharedPage?._id === _id) {
+        title && setTitle(title);
+        desc && setDesc(desc);
+      }
+    });
+
+    return () => {
+      socket.off('edit-page');
+      socket.off('receive-changes');
+    };
   }, [debouncedTitle, debouncedDesc]);
+
+  // 공유 유저 실시간 cursor 위치에 따라 profile 이동
+  useEffect(() => {
+    if (socket === null) return;
+
+    const guestInfo = { image, email, posY: y };
+
+    socket.emit('get-position', guestInfo);
+    socket.on('pos-changes', (guest) => {
+      setGuest(guest);
+      setY(guest.posY);
+      setProfile(guest.image);
+    });
+
+    return () => {
+      socket.off('pos-changes');
+    };
+  }, [y]);
 
   const { mutate: addPageMutate } = addPage;
 
@@ -84,7 +164,7 @@ function Content({ page, sharedPage }: ContentProp) {
       onSuccess: (data) => {
         queryClient.invalidateQueries(queryKeys.pages);
         if (data) {
-          router.push(`/page/${data._id}`);
+          router.push(`/page/${data._id}`, undefined, { shallow: true });
         }
       },
       onError: (error) => {
@@ -93,26 +173,60 @@ function Content({ page, sharedPage }: ContentProp) {
     });
   };
 
+  const handleChange = (e: ChangeEvent<HTMLInputElement>, input: string) => {
+    if (input === 'title') setTitle(e.target.value);
+    else setDesc(e.target.value);
+  };
+
+  const handleClick = (e: MouseEvent) => {
+    const target = e.target as HTMLInputElement;
+    const { top, height } = document
+      .getElementById(target?.id)
+      ?.getBoundingClientRect() as DOMRect;
+
+    setY(`${top - height / 2 + 50}px`);
+    // setY(`${(top - height) / 4}%`);
+    // setProfile(target?.id);
+  };
+
   return (
     <>
       <ContentHeader title={title} />
       <div className="flex h-screen flex-col items-center sm:ml-64">
+        {/* 본인 계정은 프로필이 보이면 안됨 */}
+        {profile && sharedPage && (
+          <Image
+            src={profile}
+            alt="profile"
+            width={20}
+            height={20}
+            style={{
+              position: 'absolute',
+              borderRadius: 10,
+              top: y,
+              left: 300,
+              transition: 'all ease 300ms',
+            }}
+          />
+        )}
         <div className="flex h-1/3 w-full items-end justify-center ">
           <input
-            id="message"
+            id="title"
             className="contentInput border:none text-4xl font-bold placeholder:text-4xl placeholder:text-gray-300"
             placeholder="제목 없음"
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => handleChange(e, 'title')}
+            onClick={handleClick}
             value={title}
             ref={inputRef}
           />
         </div>
         <div className="flex h-2/3 w-full flex-col items-center">
           <input
-            id="message"
+            id="desc"
             className="contentInput placeholder:text-m justify-center placeholder:text-gray-400"
             placeholder="'/'를 입력해 명령어를 사용하세요"
-            onChange={(e) => setDesc(e.target.value)}
+            onChange={(e) => handleChange(e, 'desc')}
+            onClick={handleClick}
             value={desc}
           />
           <div className="mt-10 w-2/3">
@@ -127,6 +241,7 @@ function Content({ page, sharedPage }: ContentProp) {
           </div>
         </div>
       </div>
+      {isModal && <Modal component={<ShareModal />} />}
     </>
   );
 }
