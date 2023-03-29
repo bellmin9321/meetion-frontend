@@ -4,8 +4,8 @@ import React from 'react';
 
 import useHomePage from '@/lib/hooks/useHomePage';
 
-import Content from '@/components/layout/Content';
-import Layout from '@/components/layout/Layout';
+import Content from '@/components/Layout/Content';
+import Layout from '@/components/Layout/Layout';
 
 function HomePage() {
   useHomePage();
