@@ -98,3 +98,20 @@ export const sendSharedEmail = async (body: {
     alert('이미 초대된 이메일입니다');
   }
 };
+
+export const deleteInvitedEmail = async (email: string) => {
+  try {
+    const result = await axios.delete(
+      process.env.LOCAL_BASE_URL + 'myPage/email',
+      {
+        data: {
+          email,
+        },
+      },
+    );
+
+    return result;
+  } catch (err) {
+    alert('초대된 이메일을 삭제하지 못했습니다.');
+  }
+};
