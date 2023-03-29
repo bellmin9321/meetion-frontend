@@ -1,10 +1,11 @@
 import { NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import { getSession } from 'next-auth/react';
-import { useRecoilValue } from 'recoil';
+import { useEffect } from 'react';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import useHomePage from '@/lib/hooks/useHomePage';
-import { pageListState, sharedPagesState } from '@/lib/recoil';
+import { pageListState, selectPage, sharedPagesState } from '@/lib/recoil';
 
 import Content from '@/components/layout/Content';
 import Layout from '@/components/layout/Layout';
@@ -16,6 +17,7 @@ function Page() {
   const { pid } = router.query;
   const pages = useRecoilValue(pageListState);
   const sharedPages = useRecoilValue(sharedPagesState);
+  const setSelectedPage = useSetRecoilState(selectPage);
 
   let originalId: string;
 
@@ -25,6 +27,14 @@ function Page() {
   }
   const page = pages.find((page) => page._id === originalId);
   const sharedPage = sharedPages.find((page) => page._id === originalId);
+
+  useEffect(() => {
+    if (page) {
+      setSelectedPage(page);
+    } else if (sharedPage) {
+      setSelectedPage(sharedPage);
+    }
+  }, [page, sharedPage]);
 
   return (
     <Layout>
