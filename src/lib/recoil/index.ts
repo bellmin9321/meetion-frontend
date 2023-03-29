@@ -25,6 +25,7 @@ export const newPageState = atom<PageType>({
     creator: '',
     title: '',
     desc: '',
+    sharedUsers: [],
   },
 });
 
@@ -47,13 +48,14 @@ export const userState = atom<UserType>({
   },
 });
 
-export const selectedPage = atom<PageType>({
+export const selectPage = atom<PageType>({
   key: 'selectedPage',
   default: {
     _id: '',
     creator: '',
     title: '',
     desc: '',
+    sharedUsers: [],
   },
 });
 
