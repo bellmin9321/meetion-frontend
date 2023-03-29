@@ -47,7 +47,22 @@ export const userState = atom<UserType>({
   },
 });
 
+export const selectedPage = atom<PageType>({
+  key: 'selectedPage',
+  default: {
+    _id: '',
+    creator: '',
+    title: '',
+    desc: '',
+  },
+});
+
 export const selectedPageID = atom<string | undefined>({
   key: 'pageID',
   default: '',
+});
+
+export const shareModalState = atom<boolean>({
+  key: 'shareModal',
+  default: false,
 });
