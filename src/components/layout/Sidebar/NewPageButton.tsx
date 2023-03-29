@@ -26,8 +26,8 @@ function NewPageButton() {
     addPageMutate(page, {
       onSuccess: (data) => {
         if (data) {
-          router.push(`/page/${data._id}`);
           queryClient.invalidateQueries(queryKeys.pages);
+          router.push(`/page/${data._id}`);
         }
       },
       onError: (error) => {
