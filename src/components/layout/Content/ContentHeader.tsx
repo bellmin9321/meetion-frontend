@@ -1,12 +1,20 @@
 import { signOut } from 'next-auth/react';
-import * as React from 'react';
 import { AiOutlineStar } from 'react-icons/ai';
 import { BiMessageDetail, BiTime } from 'react-icons/bi';
 import { FiMoreHorizontal } from 'react-icons/fi';
+import { useRecoilState } from 'recoil';
+
+import { shareModalState } from '@/lib/recoil';
 
 function ContentHeader({ title }: { title: string }) {
+  const [isModal, setModal] = useRecoilState(shareModalState);
+
   const handleLogout = () => {
     signOut();
+  };
+
+  const handleModal = () => {
+    setModal(!isModal);
   };
 
   return (
@@ -19,7 +27,10 @@ function ContentHeader({ title }: { title: string }) {
         >
           로그아웃
         </span>
-        <span className="mr-3 cursor-pointer rounded-md px-2 hover:bg-gray-200 ">
+        <span
+          className="mr-3 cursor-pointer rounded-md px-2 hover:bg-gray-200"
+          onClick={handleModal}
+        >
           공유
         </span>
         <BiMessageDetail className="icon mr-5 cursor-pointer rounded-md hover:bg-gray-200" />
