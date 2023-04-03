@@ -14,7 +14,6 @@ import Layout from '@/components/Layout/index';
 function Page() {
   useHomePage();
   const router = useRouter();
-
   const { pid } = router.query;
   const pages = useRecoilValue(pageListState);
   const sharedPages = useRecoilValue(sharedPagesState);
