@@ -43,7 +43,7 @@ function useHomePage() {
   );
 
   useEffect(() => {
-    if (pages.length) {
+    if (pages.length && !router.query) {
       router.push(`/page/${pages[0]?._id}`, undefined, { shallow: true });
     }
   }, []);

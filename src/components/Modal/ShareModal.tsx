@@ -31,7 +31,7 @@ function ShareModal() {
   };
 
   return (
-    <div className="absolute right-0 top-10 z-10 w-[400px] rounded border-[1px] shadow-md shadow-gray-500/50">
+    <div className="absolute right-0 top-10 z-10 w-[400px] rounded border-[1px] bg-white shadow-md shadow-gray-500/50">
       <div className="mx-3 my-2">
         <span className="mr-3">공유</span>
         <span className="font-bold">{title}</span>
