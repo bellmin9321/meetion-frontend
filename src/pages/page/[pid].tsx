@@ -8,8 +8,8 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import useHomePage from '@/lib/hooks/useHomePage';
 import { pageListState, selectPage, sharedPagesState } from '@/lib/recoil';
 
-import Content from '@/components/Layout/Content/index';
-import Layout from '@/components/Layout/index';
+import Layout from '../../components/Layout';
+import Content from '../../components/Layout/Content';
 
 function Page() {
   useHomePage();
