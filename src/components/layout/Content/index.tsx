@@ -8,7 +8,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { io, Socket } from 'socket.io-client';
 
 import { queryClient } from '@/lib/api/queryClient';
@@ -35,27 +35,27 @@ interface ContentProp {
   sharedPage?: PageType;
 }
 
-interface GuestType {
-  image?: string;
-  email?: string;
-  posY: string;
-}
+// interface GuestType {
+//   image?: string;
+//   email?: string;
+//   posY: string;
+// }
 
 function Content({ page, sharedPage }: ContentProp) {
   const [newPage, setNewPage] = useRecoilState(newPageState);
 
-  const [pages, setPages] = useRecoilState(pageListState);
+  const setPages = useSetRecoilState(pageListState);
   const { email, image } = useRecoilValue(userState);
   const isModal = useRecoilValue(shareModalState);
 
   const [title, setTitle] = useState<string>('');
   const [desc, setDesc] = useState<string | undefined>('');
   const [socket, setSocket] = useState<Socket | null>(null);
-  const [guest, setGuest] = useState<GuestType>({
-    image: '',
-    email: '',
-    posY: '',
-  });
+  // const [guest, setGuest] = useState<GuestType>({
+  //   image: '',
+  //   email: '',
+  //   posY: '',
+  // });
   const [profile, setProfile] = useState<string>('');
   const [profileEmail, setProfileEmail] = useState<string>('');
   const [y, setY] = useState<string>('');
@@ -146,7 +146,6 @@ function Content({ page, sharedPage }: ContentProp) {
 
     socket.on('pos-changes', (guest) => {
       if (sharedPage._id !== guest.id) return;
-      setGuest(guest);
       setY(guest.posY);
       setProfile(guest.image);
       setProfileEmail(guest.email);
