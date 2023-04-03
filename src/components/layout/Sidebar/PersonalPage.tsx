@@ -22,7 +22,7 @@ function PersonalPage() {
 
   useEffect(() => {
     // 공유 페이지는 있고 개인 페이지가 없을 경우에는 '/' 으로
-    if (!pages.length && !sharedPages.length) {
+    if (!pages.length && !sharedPages.length && !router.query) {
       router.push('/', undefined, { shallow: true });
     }
   }, [pages]);
