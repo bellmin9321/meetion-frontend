@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && next export",
     "start": "next start",
     "lint": "next lint",
     "test:watch": "jest --watch",
@@ -13,6 +13,7 @@
     "format:check": "prettier -c ."
   },
   "dependencies": {
+    "@netlify/plugin-nextjs": "^4.33.0",
     "next": "13.1.6",
     "next-auth": "^4.20.1",
     "react": "18.2.0",
