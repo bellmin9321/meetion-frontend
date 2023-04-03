@@ -6,7 +6,7 @@ import { LoginProperties } from '@/lib/recoil';
 
 import { LoginProp } from '@/types';
 
-function Login({ providers }: { providers: LoginProp }) {
+function SignIn({ providers }: { providers: LoginProp }) {
   return (
     <>
       <Head>
@@ -63,11 +63,11 @@ export async function getServerSideProps(context: NextPageContext) {
   } catch (error) {
     return {
       redirect: {
-        destination: '/login',
+        destination: '/auth/signin',
         statusCode: 302,
       },
     };
   }
 }
 
-export default Login;
+export default SignIn;
