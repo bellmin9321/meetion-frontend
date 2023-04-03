@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';

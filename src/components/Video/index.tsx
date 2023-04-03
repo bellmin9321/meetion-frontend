@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, useState } from 'react';
 import { AiOutlineAudioMuted, AiTwotoneAudio } from 'react-icons/ai';
 import { BsCameraVideoFill, BsCameraVideoOffFill } from 'react-icons/bs';
