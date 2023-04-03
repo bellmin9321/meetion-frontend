@@ -6,6 +6,7 @@ specifiers:
   '@tailwindcss/forms': ^0.5.3
   '@testing-library/jest-dom': ^5.16.5
   '@testing-library/react': ^13.4.0
+  '@types/follow-redirects': ^1.14.1
   '@types/next-auth': ^3.15.0
   '@types/node': ^18.13.0
   '@types/react': ^18.0.28
@@ -19,6 +20,7 @@ specifiers:
   eslint-config-prettier: ^8.6.0
   eslint-plugin-simple-import-sort: ^10.0.0
   eslint-plugin-unused-imports: ^2.0.0
+  follow-redirects: ^1.15.2
   jest: ^29.4.2
   jest-environment-jsdom: ^29.4.2
   next: 13.1.6
@@ -38,6 +40,7 @@ specifiers:
 
 dependencies:
   '@netlify/plugin-nextjs': 4.33.0
+  follow-redirects: 1.15.2
   next: 13.1.6_biqbaboplfbrettd7655fr4n2y
   next-auth: 4.21.1_3vryta7zmbcsw4rrqf4axjqggm
   react: 18.2.0
@@ -50,6 +53,7 @@ devDependencies:
   '@tailwindcss/forms': 0.5.3_tailwindcss@3.3.1
   '@testing-library/jest-dom': 5.16.5
   '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
+  '@types/follow-redirects': 1.14.1
   '@types/next-auth': 3.15.0_3vryta7zmbcsw4rrqf4axjqggm
   '@types/node': 18.13.0
   '@types/react': 18.0.28
@@ -1297,6 +1301,12 @@ packages:
     resolution: {integrity: sha512-1kbcJ40lLB7MHsj39U4Sh1uTd2E7rLEa79kmDpI6cy+XiXsteB3POdQomoq4FxszMrO3ZYchkhYJw7A2862b3w==}
     dependencies:
       '@babel/types': 7.21.4
+    dev: true
+
+  /@types/follow-redirects/1.14.1:
+    resolution: {integrity: sha512-THBEFwqsLuU/K62B5JRwab9NW97cFmL4Iy34NTMX0bMycQVzq2q7PKOkhfivIwxdpa/J72RppgC42vCHfwKJ0Q==}
+    dependencies:
+      '@types/node': 18.13.0
     dev: true
 
   /@types/graceful-fs/4.1.6:
