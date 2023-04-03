@@ -9,7 +9,7 @@ import useHomePage from '@/lib/hooks/useHomePage';
 import { pageListState, selectPage, sharedPagesState } from '@/lib/recoil';
 
 import Content from '@/components/Content';
-import Layout from '@/components/Layout';
+import Layout from '@/components/layout';
 
 function Page() {
   useHomePage();
