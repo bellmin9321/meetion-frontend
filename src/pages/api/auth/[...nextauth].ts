@@ -31,5 +31,9 @@ export default NextAuth({
       clientSecret: process.env.NAVER_CLIENT_SECRET as string,
     }),
   ],
+  pages: {
+    signIn: '/auth/signin',
+    error: 'auth/error',
+  },
   secret: process.env.JWT_SECRET as string,
 });
