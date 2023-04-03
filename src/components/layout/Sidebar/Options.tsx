@@ -1,13 +1,10 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 import { BiSearch, BiTime } from 'react-icons/bi';
 import { FaRegSun } from 'react-icons/fa';
 
 import List from '@/components/List/List';
 
-export interface CategoryType {
-  name: string;
-  icon: ReactNode;
-}
+import { CategoryType } from '@/types';
 
 function Options() {
   const categories = [

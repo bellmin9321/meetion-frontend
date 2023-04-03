@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 export interface PageType {
   _id?: string;
   creator: string;
@@ -10,6 +12,11 @@ export interface UserType {
   email: string;
   image: string;
   name: string;
+}
+
+export interface CategoryType {
+  name: string;
+  icon: ReactNode;
 }
 
 export interface LoginProp {
