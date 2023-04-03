@@ -12,8 +12,8 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { io, Socket } from 'socket.io-client';
 
 import { queryClient } from '@/lib/api/queryClient';
-import useDebounce from '@/lib/hooks/useDebounce';
 import usePageMutation from '@/lib/hooks/usePageMutation';
+import useThrottle from '@/lib/hooks/useThrottle';
 import {
   newPageState,
   pageListState,
@@ -23,6 +23,7 @@ import {
 
 import Modal from '@/components/Modal';
 import ShareModal from '@/components/Modal/ShareModal';
+import Video from '@/components/Video';
 
 import ContentHeader from './ContentHeader';
 
@@ -56,10 +57,11 @@ function Content({ page, sharedPage }: ContentProp) {
     posY: '',
   });
   const [profile, setProfile] = useState<string>('');
+  const [profileEmail, setProfileEmail] = useState<string>('');
   const [y, setY] = useState<string>('');
 
-  const debouncedTitle = useDebounce({ value: title, delay: 500 });
-  const debouncedDesc = useDebounce({ value: desc, delay: 500 });
+  const debouncedTitle = useThrottle({ value: title, delay: 500 });
+  const debouncedDesc = useThrottle({ value: desc, delay: 500 });
   const { addPage } = usePageMutation();
   const router = useRouter();
 
@@ -121,7 +123,7 @@ function Content({ page, sharedPage }: ContentProp) {
       setPages(notSharedPages);
     });
 
-    // 공유되지 않은 페이지는 텍스트를 공유하지 않도록 조건 추가
+    // 공유된 페이지만 텍스트를 공유하도록 조건 추가
     if (sharedPage) {
       socket.emit('shared-page', updatedSharedPage);
       socket.on('receive-changes', ({ _id, title, desc }) => {
@@ -142,21 +144,19 @@ function Content({ page, sharedPage }: ContentProp) {
   useEffect(() => {
     if (socket === null || !sharedPage) return;
 
-    const guestInfo = { id: sharedPage._id, image, email, posY: y };
-
-    socket.emit('get-position', guestInfo);
     socket.on('pos-changes', (guest) => {
       if (sharedPage._id !== guest.id) return;
-
       setGuest(guest);
       setY(guest.posY);
       setProfile(guest.image);
+      setProfileEmail(guest.email);
+      console.log(`my: ${email}, your: ${guest.email}`);
     });
 
     return () => {
       socket.off('pos-changes');
     };
-  }, [y]);
+  }, []);
 
   const { mutate: addPageMutate } = addPage;
 
@@ -190,17 +190,27 @@ function Content({ page, sharedPage }: ContentProp) {
       .getElementById(target?.id)
       ?.getBoundingClientRect() as DOMRect;
 
-    setY(`${top - height / 2 + 50}px`);
-    // setY(`${(top - height) / 4}%`);
-    // setProfile(target?.id);
+    if (socket === null || !sharedPage) return;
+
+    const guestInfo = {
+      id: sharedPage._id,
+      image,
+      email,
+      posY: `${top - height / 2 + 50}px`,
+    };
+
+    socket.emit('get-position', guestInfo);
   };
 
   return (
     <>
       <ContentHeader title={title} />
       <div className="flex h-screen flex-col items-center sm:ml-64">
+        <div className="mt-20 mb-10">
+          {sharedPage && <Video roomName={router.query.pid} />}
+        </div>
         {/* 본인 계정은 프로필이 보이면 안됨 */}
-        {sharedPage && profile && (
+        {sharedPage && profile && email !== profileEmail && (
           <Image
             src={profile}
             alt="profile"
@@ -215,7 +225,7 @@ function Content({ page, sharedPage }: ContentProp) {
             }}
           />
         )}
-        <div className="flex h-1/3 w-full items-end justify-center ">
+        <div className="flex w-full items-end justify-center ">
           <input
             id="title"
             className="contentInput border:none text-4xl font-bold placeholder:text-4xl placeholder:text-gray-300"
