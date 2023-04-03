@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import * as React from 'react';
 
-import Layout from '@/components/Layout';
+import Layout from '@/components/Layout/index';
 import Seo from '@/components/Seo';
 
 export default function NotFoundPage() {
