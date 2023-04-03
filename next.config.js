@@ -10,6 +10,7 @@ const nextConfig = {
     LOCAL_BASE_URL: process.env.LOCAL_BASE_URL,
   },
   images: {
+    loader: 'akamai',
     remotePatterns: [
       {
         protocol: 'https',
