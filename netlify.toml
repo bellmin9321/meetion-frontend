@@ -4,9 +4,4 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
-
-[[redirects]]
-  from = "/*"
-  to = "http://ec2-43-207-223-70.ap-northeast-1.compute.amazonaws.com/:splat"
-  status = 200
-  force = true
+  
