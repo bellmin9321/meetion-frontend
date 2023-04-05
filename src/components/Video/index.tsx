@@ -88,7 +88,9 @@ function Video({ roomName }: VideoProps) {
   };
 
   useEffect(() => {
-    socketRef.current = io(process.env.LOCAL_BASE_URL as string);
+    socketRef.current = io(process.env.LOCAL_BASE_URL as string, {
+      secure: true,
+    });
 
     pcRef.current = new RTCPeerConnection({
       iceServers: [

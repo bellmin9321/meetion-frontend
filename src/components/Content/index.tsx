@@ -105,7 +105,7 @@ function Content({ page, sharedPage }: ContentProp) {
   }, [debouncedTitle, debouncedDesc]);
 
   useEffect(() => {
-    setSocket(io(process.env.LOCAL_BASE_URL as string));
+    setSocket(io(process.env.LOCAL_BASE_URL as string, { secure: true }));
 
     return () => {
       socket?.disconnect();
