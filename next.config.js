@@ -12,7 +12,7 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: `http://ec2-43-207-223-70.ap-northeast-1.compute.amazonaws.com/api/:path*`,
+        destination: `https://ec2-43-207-223-70.ap-northeast-1.compute.amazonaws.com/api/:path*`,
       },
     ];
   },
