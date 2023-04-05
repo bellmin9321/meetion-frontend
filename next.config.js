@@ -11,8 +11,8 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: '/api/*',
-        destination: `http://ec2-43-207-223-70.ap-northeast-1.compute.amazonaws.com/:splat`,
+        source: '/api/:path*',
+        destination: `http://ec2-43-207-223-70.ap-northeast-1.compute.amazonaws.com/api/:path*`,
       },
     ];
   },
