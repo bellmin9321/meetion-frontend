@@ -50,7 +50,7 @@ export async function getServerSideProps(context: NextPageContext) {
 
     if (!session && res) {
       res.writeHead(302, {
-        Location: '/login',
+        Location: '/auth/signin',
       });
       res.end();
       return { props: {} };
@@ -60,7 +60,7 @@ export async function getServerSideProps(context: NextPageContext) {
   } catch (error) {
     return {
       redirect: {
-        destination: '/login',
+        destination: '/auth/signin',
         statusCode: 302,
       },
     };
