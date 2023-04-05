@@ -3,11 +3,18 @@ const nextConfig = {
   eslint: {
     dirs: ['src'],
   },
-
   reactStrictMode: true,
   swcMinify: true,
   env: {
     LOCAL_BASE_URL: process.env.LOCAL_BASE_URL,
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: `http://ec2-43-207-223-70.ap-northeast-1.compute.amazonaws.com/:path*`,
+      },
+    ];
   },
   images: {
     loader: 'akamai',
