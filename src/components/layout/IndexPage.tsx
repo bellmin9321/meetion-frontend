@@ -25,6 +25,10 @@ function IndexPage({ title, description, url, image }: IndexPageProp) {
       <meta property="og:url" content={url || 'https://meetion.com'} />
       <meta property="og:image" content={image} />
       <meta property="og:article:author" content="bellmin" />
+      <meta
+        http-equiv="Content-Security-Policy"
+        content="upgrade-insecure-requests"
+      />
       <link rel="icon" />
     </Head>
   );
