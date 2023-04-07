@@ -7,15 +7,16 @@ const nextConfig = {
   swcMinify: true,
   env: {
     LOCAL_BASE_URL: process.env.LOCAL_BASE_URL,
+    AWS_BASE_URL: process.env.AWS_BASE_URL
   },
-  // async rewrites() {
-  //   return [
-  //     {
-  //       source: '/:path*',
-  //       destination: `http://ec2-43-207-223-70.ap-northeast-1.compute.amazonaws.com:8000/:path*`,
-  //     },
-  //   ];
-  // },
+  async rewrites() {
+    return [
+      {
+        source: '/:path*',
+        destination: `http://ec2-13-125-205-225.ap-northeast-2.compute.amazonaws.com:8000/:path*`,
+      },
+    ];
+  },
   images: {
     loader: 'akamai',
     path: '/',
