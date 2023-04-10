@@ -1,38 +1,56 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 📝 **Meetion**
 
-## Getting Started
+[배포 주소](https://meetion.netlify.app)
 
-First, run the development server:
+# 💬 **프로젝트 설명**
 
-```bash
+> nextjs와 nodejs로 Notion과 구글밋을 융합한 풀스택 프로젝트입니다. 노션의 문서를 공유한 유저와 Socket을 이용하여 실시간 문서 작성 기능 및 구글밋의 화상 채팅을 적용했습니다. 백엔드는 nodejs로 개발되었고 mongoDB에 문서 및 유저 데이터를 저장했습니다. AWS EC2와 로드밸런서를 적용하여 무중단 배포 운영중입니다.
+
+# 🔑 **프로젝트 실행방법**
+
+```
+1. package 설치
+npm i
+
+2. 실행
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# 🌈 기술 스택
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+- **Next.js**
+  - 서버 사이드 렌더링(SSR)으로 데이터 pre-reloading 및 SEO 최적화
+  - 페이지 기반 라우팅 시스템
+  - Code Splitting (코드 분할)
+- **Typescript**
+  - 컴파일 과정에서 type 체크
+- **Socket**, **Web-RTC**
+  - 실시간 통신 및 영상 통화
+- **React-query**
+  - API 데이터 캐싱 및 관리
+- **Recoil**
+  - 보일러 플레이트 없이 전역 상태 관리
+- **Tailwind**
+  - class 없이 사용 가능
+- **AWS EC2 & Loadbalancer**
+  - HTTPS 통신 및 무중단 배포 운영
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+# ⭐️ 주요 기능
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### 1. 공유한 유저와 실시간 문서 작성 및 화상 채팅
+- 1:1 화상 채팅
 
-## Learn More
+  
 
-To learn more about Next.js, take a look at the following resources:
+### 2. 페이지 공유
+- 해당 페이지에 이메일을 초대하여 페이지 공유
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### 3.페이지 생성 / 수정 / 삭제
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+# 🔥 보완할 점
+- Web-RTC 화상 채팅을 1:n으로 기능 추가 필요
+- 페이지의 description을 text가 아닌 Input 단위로 저장하기
+- image 및 텍스트 Drag & Drop 적용
