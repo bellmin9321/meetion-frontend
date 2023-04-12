@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, {
   ChangeEvent,
@@ -8,15 +7,16 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { io, Socket } from 'socket.io-client';
 
 import { queryClient } from '@/lib/api/queryClient';
+import useDebounce from '@/lib/hooks/useDebounce';
 import usePageMutation from '@/lib/hooks/usePageMutation';
-import useThrottle from '@/lib/hooks/useThrottle';
 import {
   newPageState,
   pageListState,
+  sharedPagesState,
   shareModalState,
   userState,
 } from '@/lib/recoil';
@@ -43,25 +43,20 @@ interface ContentProp {
 
 function Content({ page, sharedPage }: ContentProp) {
   const [newPage, setNewPage] = useRecoilState(newPageState);
-
-  const setPages = useSetRecoilState(pageListState);
+  const [pages, setPages] = useRecoilState(pageListState);
+  const [sharedPages, setSharedPages] = useRecoilState(sharedPagesState);
   const { email, image } = useRecoilValue(userState);
   const isModal = useRecoilValue(shareModalState);
 
   const [title, setTitle] = useState<string>('');
   const [desc, setDesc] = useState<string | undefined>('');
   const [socket, setSocket] = useState<Socket | null>(null);
-  // const [guest, setGuest] = useState<GuestType>({
-  //   image: '',
-  //   email: '',
-  //   posY: '',
-  // });
   const [profile, setProfile] = useState<string>('');
   const [profileEmail, setProfileEmail] = useState<string>('');
   const [y, setY] = useState<string>('');
 
-  const debouncedTitle = useThrottle({ value: title, delay: 500 });
-  const debouncedDesc = useThrottle({ value: desc, delay: 500 });
+  const debouncedTitle = useDebounce({ value: title, delay: 500 });
+  const debouncedDesc = useDebounce({ value: desc, delay: 500 });
   const { addPage } = usePageMutation();
   const router = useRouter();
 
@@ -79,6 +74,23 @@ function Content({ page, sharedPage }: ContentProp) {
     title,
     desc,
   };
+
+  // client 단에서 즉시 title, desc 변경을 위함
+  useEffect(() => {
+    if (sharedPage) {
+      const targetIndex = sharedPages.findIndex(
+        (v) => v._id === sharedPage?._id,
+      );
+      const newPages = [...sharedPages];
+      newPages.splice(targetIndex, 1, updatedSharedPage);
+      setSharedPages(newPages);
+    } else if (page && page.creator && email) {
+      const targetIndex = pages.findIndex((v) => v._id === page?._id);
+      const newPages = [...pages];
+      newPages.splice(targetIndex, 1, updatedPage);
+      setPages(newPages);
+    }
+  }, [title, desc]);
 
   // Sidebar Page 선택 시 default title, desc 설정
   useEffect(() => {
@@ -140,23 +152,6 @@ function Content({ page, sharedPage }: ContentProp) {
     };
   }, [debouncedTitle, debouncedDesc]);
 
-  // 공유 유저 실시간 cursor 위치에 따라 profile 이동
-  useEffect(() => {
-    if (socket === null || !sharedPage) return;
-
-    socket.on('pos-changes', (guest) => {
-      if (sharedPage._id !== guest.id) return;
-      setY(guest.posY);
-      setProfile(guest.image);
-      setProfileEmail(guest.email);
-      console.log(`my: ${email}, your: ${guest.email}`);
-    });
-
-    return () => {
-      socket.off('pos-changes');
-    };
-  }, []);
-
   const { mutate: addPageMutate } = addPage;
 
   const handleAddPage = () => {
@@ -199,6 +194,18 @@ function Content({ page, sharedPage }: ContentProp) {
     };
 
     socket.emit('get-position', guestInfo);
+    socket.on('pos-changes', (guest) => {
+      if (sharedPage._id !== guest.id) return;
+
+      setY(guest.posY);
+      setProfile(guest.image);
+      setProfileEmail(guest.email);
+      console.log(`my: ${email}, your: ${guest.email}`);
+    });
+
+    return () => {
+      socket.off('pos-changes');
+    };
   };
 
   return (
@@ -210,7 +217,7 @@ function Content({ page, sharedPage }: ContentProp) {
         </div>
         {/* 본인 계정은 프로필이 보이면 안됨 */}
         {sharedPage && profile && email !== profileEmail && (
-          <Image
+          <img
             src={profile}
             alt="profile"
             width={20}
@@ -223,6 +230,19 @@ function Content({ page, sharedPage }: ContentProp) {
               transition: 'all ease 300ms',
             }}
           />
+          // <Image
+          //   src={profile}
+          //   alt="profile"
+          //   width={20}
+          //   height={20}
+          //   style={{
+          //     position: 'absolute',
+          //     borderRadius: 10,
+          //     top: y,
+          //     left: 300,
+          //     transition: 'all ease 300ms',
+          //   }}
+          // />
         )}
         <div className="flex w-full items-end justify-center ">
           <input
