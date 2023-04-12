@@ -1,15 +1,29 @@
 import Image from 'next/image';
-import React, { ChangeEvent, useState } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import React, { ChangeEvent, useEffect, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 import { sendSharedEmail } from '@/lib/api/page';
-import { selectPage, shareModalState, userState } from '@/lib/recoil';
+import {
+  invitedEmails,
+  pageListState,
+  selectPage,
+  sharedPagesState,
+  userState,
+} from '@/lib/recoil';
 
 function ShareModal() {
-  const setModal = useSetRecoilState(shareModalState);
   const user = useRecoilValue(userState);
   const [email, setEmail] = useState<string>('');
-  const { _id, title, sharedUsers } = useRecoilValue(selectPage);
+
+  const [pages, setPages] = useRecoilState(pageListState);
+  const [sharedPages, setSharedPages] = useRecoilState(sharedPagesState);
+  const selectedPage = useRecoilValue(selectPage);
+  const { _id, title, sharedUsers } = selectedPage;
+  const [invitedUsers, setinvitedUsers] = useRecoilState(invitedEmails);
+
+  useEffect(() => {
+    setinvitedUsers(sharedUsers);
+  }, []);
 
   const inviteEmail = async () => {
     if (user.email === email) {
@@ -17,9 +31,17 @@ function ShareModal() {
       return;
     }
 
-    const result = await sendSharedEmail({ email, _id });
+    await sendSharedEmail({ email, _id });
 
-    result ? setModal(false) : null;
+    if (!invitedUsers?.length) {
+      const newPages = [...pages];
+      const targetPageIndex = newPages.findIndex((v) => v._id === _id);
+      const deletedPage = newPages.splice(targetPageIndex, 1)[0];
+      setPages(newPages);
+      setSharedPages([...sharedPages, deletedPage]);
+    }
+    setinvitedUsers([...(invitedUsers ?? []), email]);
+    setEmail('');
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -40,6 +62,7 @@ function ShareModal() {
         <input
           className="mr-2 w-[80%] rounded border-[1px] border-gray-300 bg-gray-100 py-1 pl-2 placeholder-slate-400"
           placeholder="이메일 추가"
+          value={email}
           onChange={handleChange}
         />
         <button
@@ -50,11 +73,11 @@ function ShareModal() {
         </button>
       </div>
       <div className="mx-3 my-3">
-        {sharedUsers && sharedUsers.length > 0 && (
+        {invitedUsers && invitedUsers.length > 0 && (
           <div className="mb-2 text-sm text-black/60">초대된 이메일</div>
         )}
-        {sharedUsers &&
-          sharedUsers.map((guest, i) => {
+        {invitedUsers &&
+          invitedUsers.map((guest, i) => {
             return (
               <div key={i} className="mb-3 flex items-center justify-between">
                 <div className="flex flex-row">
