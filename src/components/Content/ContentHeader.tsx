@@ -1,13 +1,13 @@
 import { signOut } from 'next-auth/react';
-import { AiOutlineStar } from 'react-icons/ai';
-import { BiMessageDetail, BiTime } from 'react-icons/bi';
-import { FiMoreHorizontal } from 'react-icons/fi';
+import { useState } from 'react';
+import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
 import { useRecoilState } from 'recoil';
 
 import { shareModalState } from '@/lib/recoil';
 
 function ContentHeader({ title }: { title: string }) {
   const [isModal, setModal] = useRecoilState(shareModalState);
+  const [isFavorite, setFavorite] = useState<boolean>(false);
 
   const handleLogout = () => {
     signOut();
@@ -15,6 +15,10 @@ function ContentHeader({ title }: { title: string }) {
 
   const handleModal = () => {
     setModal(!isModal);
+  };
+
+  const handleClick = () => {
+    setFavorite(!isFavorite);
   };
 
   return (
@@ -33,10 +37,19 @@ function ContentHeader({ title }: { title: string }) {
         >
           공유
         </span>
-        <BiMessageDetail className="icon mr-5 cursor-pointer rounded-md hover:bg-gray-200" />
-        <BiTime className="icon mr-5 cursor-pointer rounded-md hover:bg-gray-200" />
-        <AiOutlineStar className="icon mr-5 cursor-pointer rounded-md hover:bg-gray-200" />
-        <FiMoreHorizontal className="icon mr-5 cursor-pointer rounded-md hover:bg-gray-200" />
+        {/* <BiMessageDetail className="icon mr-5 cursor-pointer rounded-md hover:bg-gray-200" /> */}
+        {/* <BiTime className="icon mr-5 cursor-pointer rounded-md hover:bg-gray-200" /> */}
+        <button onClick={handleClick}>
+          {isFavorite ? (
+            <AiFillStar
+              className="icon mr-5 cursor-pointer rounded-md 
+          fill-yellow-400 hover:bg-gray-200"
+            />
+          ) : (
+            <AiOutlineStar className="icon mr-5 cursor-pointer rounded-md hover:bg-gray-200" />
+          )}
+        </button>
+        {/* <FiMoreHorizontal className="icon mr-5 cursor-pointer rounded-md hover:bg-gray-200" /> */}
       </div>
     </header>
   );
