@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 
 export interface PageType {
   _id?: string;
-  creator: string;
+  creator?: string;
   title: string;
   desc?: string;
   sharedUsers?: string[];

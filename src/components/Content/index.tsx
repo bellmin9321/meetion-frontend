@@ -230,19 +230,6 @@ function Content({ page, sharedPage }: ContentProp) {
               transition: 'all ease 300ms',
             }}
           />
-          // <Image
-          //   src={profile}
-          //   alt="profile"
-          //   width={20}
-          //   height={20}
-          //   style={{
-          //     position: 'absolute',
-          //     borderRadius: 10,
-          //     top: y,
-          //     left: 300,
-          //     transition: 'all ease 300ms',
-          //   }}
-          // />
         )}
         <div className="flex w-full items-end justify-center ">
           <input
