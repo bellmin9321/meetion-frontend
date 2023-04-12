@@ -2,7 +2,7 @@ import Image from 'next/image';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
-import { sendSharedEmail } from '@/lib/api/page';
+import { deleteInvitedEmail, sendSharedEmail } from '@/lib/api/page';
 import {
   invitedEmails,
   pageListState,
@@ -48,8 +48,12 @@ function ShareModal() {
     setEmail(e.target.value);
   };
 
-  const deleteInvitedEmail = (email: string) => {
-    console.log('delete email!!!', email);
+  const deleteEmail = async (email: string, index: number) => {
+    _id && (await deleteInvitedEmail(_id, email));
+    const newInvitedUsers = invitedUsers && [...invitedUsers];
+    newInvitedUsers?.splice(index, 1);
+
+    setinvitedUsers(newInvitedUsers);
   };
 
   return (
@@ -94,7 +98,7 @@ function ShareModal() {
                 </div>
                 <button
                   className="mr-3 p-1 text-sm text-black/50 hover:opacity-50"
-                  onClick={() => deleteInvitedEmail(guest)}
+                  onClick={() => deleteEmail(guest, i)}
                 >
                   삭제
                 </button>
