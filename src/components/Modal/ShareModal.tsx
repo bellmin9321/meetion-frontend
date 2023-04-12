@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
@@ -85,7 +84,7 @@ function ShareModal() {
             return (
               <div key={i} className="mb-3 flex items-center justify-between">
                 <div className="flex flex-row">
-                  <Image
+                  <img
                     src={user.image}
                     width={30}
                     height={30}
