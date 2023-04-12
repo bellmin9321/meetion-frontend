@@ -68,3 +68,8 @@ export const shareModalState = atom<boolean>({
   key: 'shareModal',
   default: false,
 });
+
+export const invitedEmails = atom<string[] | undefined>({
+  key: 'invitedEmails',
+  default: [],
+});
