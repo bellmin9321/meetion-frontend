@@ -1,7 +1,6 @@
 import React from 'react';
 
 import NewPage from './NewPageButton';
-import Options from './Options';
 import PersonalPage from './PersonalPage';
 import SharedPage from './SharedPage';
 import SidebarLayout from './SidebarLayout';
@@ -9,7 +8,7 @@ import SidebarLayout from './SidebarLayout';
 function Sidebar() {
   return (
     <SidebarLayout>
-      <Options />
+      {/* <Options /> */}
       <SharedPage />
       <PersonalPage />
       <NewPage />
