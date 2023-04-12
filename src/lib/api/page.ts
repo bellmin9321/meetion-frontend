@@ -99,12 +99,13 @@ export const sendSharedEmail = async (body: {
   }
 };
 
-export const deleteInvitedEmail = async (email: string) => {
+export const deleteInvitedEmail = async (_id: string, email: string) => {
   try {
     const result = await axios.delete(
-      process.env.LOCAL_BASE_URL + 'myPage/email',
+      process.env.LOCAL_BASE_URL + 'myPage/sharedEmail',
       {
         data: {
+          _id,
           email,
         },
       },
