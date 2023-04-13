@@ -61,6 +61,7 @@ function Content({ page, sharedPage }: ContentProp) {
   const router = useRouter();
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const updatedPage = {
     ...page,
@@ -173,9 +174,14 @@ function Content({ page, sharedPage }: ContentProp) {
     });
   };
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>, input: string) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    input: string,
+  ) => {
     if (input === 'title') setTitle(e.target.value);
     else setDesc(e.target.value);
+
+    handleResizeHeight();
   };
 
   const handleClick = (e: MouseEvent) => {
@@ -204,6 +210,25 @@ function Content({ page, sharedPage }: ContentProp) {
 
     return () => {
       socket.off('pos-changes');
+    };
+  };
+
+  const handleResizeHeight = () => {
+    if (!socket || !textareaRef.current) return;
+
+    textareaRef.current.style.height = 'auto';
+    textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
+    const height = textareaRef.current.scrollHeight + 'px';
+
+    socket.emit('send-textareaHeight', height);
+    socket.on('get-textareaHeight', (height) => {
+      if (!textareaRef.current) return;
+
+      textareaRef.current.style.height = height;
+    });
+
+    return () => {
+      socket.off('send-textareaHeight');
     };
   };
 
@@ -242,24 +267,27 @@ function Content({ page, sharedPage }: ContentProp) {
           />
         </div>
         <div className="flex h-2/3 w-full flex-col items-center">
-          <input
+          <textarea
+            rows={1}
             id="desc"
-            className="contentInput placeholder:text-m justify-center placeholder:text-gray-400"
-            placeholder="'/'를 입력해 명령어를 사용하세요"
+            className="contentInput placeholder:text-m h-[200px] justify-center placeholder:text-gray-400"
+            placeholder="설명 작성하기"
+            // placeholder="'/'를 입력해 명령어를 사용하세요"
             onChange={(e) => handleChange(e, 'desc')}
             onClick={handleClick}
             value={desc}
+            ref={textareaRef}
           />
-          <div className="mt-10 w-2/3">
-            {!page && !sharedPage && (
+          {!page && !sharedPage && (
+            <div className="mt-10 w-2/3">
               <button
                 className="mr-5 rounded bg-blue-500 px-3 py-2 text-white"
                 onClick={handleAddPage}
               >
                 생성
               </button>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
       {isModal && <Modal component={<ShareModal />} />}
