@@ -139,35 +139,37 @@ function Video({ roomName }: VideoProps) {
         pcRef.current.close();
       }
     };
-  }, [roomName, isWebcamOpen]);
+  }, [roomName]);
 
   const handleClick = () => {
-    setWebcamOpen(!isWebcamOpen);
+    if (stream) {
+      stream.getTracks().forEach((track) => {
+        if (track.kind === 'video') {
+          if (!socketRef.current) return;
 
-    if (!isWebcamOpen || !myVideoRef.current) return;
-    myVideoRef.current.pause();
-    stream?.getVideoTracks()[0].stop();
-
-    // const tracks = stream?.getTracks();
-    // tracks?.forEach((track) => track.stop());
-    // setStream(null);
+          if (track.enabled) {
+            track.enabled = false;
+            setWebcamOpen(false);
+          } else {
+            track.enabled = true;
+            setWebcamOpen(true);
+          }
+        }
+      });
+    }
   };
 
   return (
     <div className="flex flex-row justify-center">
       <div className="mr-10 flex flex-col justify-center">
-        {isWebcamOpen ? (
-          <video
-            id="myVideo"
-            className="h-36 w-48 bg-black"
-            style={{ transform: 'rotateY(180deg)' }}
-            ref={myVideoRef}
-            muted={isMuted}
-            autoPlay
-          />
-        ) : (
-          <div className="h-36 w-48 bg-black"></div>
-        )}
+        <video
+          id="myVideo"
+          className="h-36 w-48 bg-black"
+          style={{ transform: 'rotateY(180deg)' }}
+          ref={myVideoRef}
+          muted={isMuted}
+          autoPlay
+        />
         <div className="flex flex-row justify-evenly bg-black/10 py-2">
           <button
             className={`flex h-8 w-8 items-center justify-center rounded-3xl ${
