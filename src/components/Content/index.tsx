@@ -195,12 +195,11 @@ function Content({ page, sharedPage }: ContentProp) {
 
     socket.emit('get-position', guestInfo);
     socket.on('pos-changes', (guest) => {
-      if (sharedPage._id !== guest.id) return;
+      if (sharedPage._id !== guest.id && guest.email === email) return;
 
       setY(guest.posY);
       setProfile(guest.image);
       setProfileEmail(guest.email);
-      console.log(`my: ${email}, your: ${guest.email}`);
     });
 
     return () => {
