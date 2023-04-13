@@ -160,6 +160,7 @@ function Video({ roomName }: VideoProps) {
           <video
             id="myVideo"
             className="h-36 w-48 bg-black"
+            style={{ transform: 'rotateY(180deg)' }}
             ref={myVideoRef}
             muted={isMuted}
             autoPlay
@@ -189,6 +190,7 @@ function Video({ roomName }: VideoProps) {
       <video
         id="remotevideo"
         className="h-36 w-48 bg-black"
+        style={{ transform: 'rotateY(180deg)' }}
         ref={remoteVideoRef}
         autoPlay
       />
