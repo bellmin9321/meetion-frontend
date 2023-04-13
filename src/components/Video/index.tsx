@@ -17,6 +17,10 @@ function Video({ roomName }: VideoProps) {
   const [isMuted, setMuted] = useState<boolean>(false);
   const [stream, setStream] = useState<MediaStream | null>(null);
 
+  useEffect(() => {
+    setWebcamOpen(true);
+  }, [roomName]);
+
   const getMedia = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
