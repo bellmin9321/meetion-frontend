@@ -228,7 +228,7 @@ function Content({ page, sharedPage }: ContentProp) {
     });
 
     return () => {
-      socket.off('send-textareaHeight');
+      socket.off('get-textareaHeight');
     };
   };
 
