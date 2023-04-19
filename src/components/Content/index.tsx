@@ -35,12 +35,6 @@ interface ContentProp {
   sharedPage?: PageType;
 }
 
-// interface GuestType {
-//   image?: string;
-//   email?: string;
-//   posY: string;
-// }
-
 function Content({ page, sharedPage }: ContentProp) {
   const [newPage, setNewPage] = useRecoilState(newPageState);
   const [pages, setPages] = useRecoilState(pageListState);
@@ -50,6 +44,7 @@ function Content({ page, sharedPage }: ContentProp) {
 
   const [title, setTitle] = useState<string>('');
   const [desc, setDesc] = useState<string | undefined>('');
+  const [writingUser, setWritingUser] = useState<string | undefined>('');
   const [socket, setSocket] = useState<Socket | null>(null);
   const [profile, setProfile] = useState<string>('');
   const [profileEmail, setProfileEmail] = useState<string>('');
@@ -72,11 +67,12 @@ function Content({ page, sharedPage }: ContentProp) {
 
   const updatedSharedPage = {
     ...sharedPage,
+    writingUser,
     title,
     desc,
   };
 
-  // client 단에서 즉시 title, desc 변경을 위함
+  // client 단에서 즉시 title 변경을 위함
   useEffect(() => {
     if (sharedPage) {
       const targetIndex = sharedPages.findIndex(
@@ -91,7 +87,7 @@ function Content({ page, sharedPage }: ContentProp) {
       newPages.splice(targetIndex, 1, updatedPage);
       setPages(newPages);
     }
-  }, [title, desc]);
+  }, [title]);
 
   // Sidebar Page 선택 시 default title, desc 설정
   useEffect(() => {
@@ -128,29 +124,27 @@ function Content({ page, sharedPage }: ContentProp) {
   useEffect(() => {
     if (socket === null) return;
 
-    socket.emit('get-page', updatedPage);
-    socket.on('edit-page', ({ pages }) => {
-      const notSharedPages = pages.filter(
-        (page: PageType) => page.sharedUsers && !page.sharedUsers.length,
-      );
-      setPages(notSharedPages);
-    });
-
-    // 공유된 페이지만 텍스트를 공유하도록 조건 추가
+    // 공유된 페이지만 title, desc 공유
     if (sharedPage) {
+      setWritingUser(email);
+
       socket.emit('shared-page', updatedSharedPage);
-      socket.on('receive-changes', ({ _id, title, desc }) => {
+      socket.on('receive-changes', ({ _id, title, desc, writer }) => {
         if (sharedPage?._id === _id) {
+          setWritingUser(writer);
+          if (email === writingUser) return;
+
           title && setTitle(title);
           desc && setDesc(desc);
         }
       });
-    }
 
-    return () => {
-      socket.off('edit-page');
-      socket.off('receive-changes');
-    };
+      return () => {
+        socket.off('receive-changes');
+      };
+    } else {
+      socket.emit('get-page', updatedPage);
+    }
   }, [debouncedTitle, debouncedDesc]);
 
   const { mutate: addPageMutate } = addPage;
@@ -255,7 +249,7 @@ function Content({ page, sharedPage }: ContentProp) {
             }}
           />
         )}
-        <div className="flex w-full items-end justify-center ">
+        <div className="flex w-full items-end justify-center">
           <input
             id="title"
             className="contentInput border:none text-4xl font-bold placeholder:text-4xl placeholder:text-gray-300"
