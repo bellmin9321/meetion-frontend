@@ -1,27 +1,31 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
-import { deleteInvitedEmail, sendSharedEmail } from '@/lib/api/page';
+import { queryClient } from '@/lib/api/queryClient';
+import useEmailMutation from '@/lib/hooks/useEmailMutation';
 import {
   invitedEmails,
-  pageListState,
   selectPage,
   sharedPagesState,
   userState,
 } from '@/lib/recoil';
 
+import { queryKeys } from '@/types/commonType';
+
 function ShareModal() {
   const user = useRecoilValue(userState);
   const [email, setEmail] = useState<string>('');
-
-  const [pages, setPages] = useRecoilState(pageListState);
-  const [sharedPages, setSharedPages] = useRecoilState(sharedPagesState);
+  sharedPagesState;
   const selectedPage = useRecoilValue(selectPage);
   const { _id, title, sharedUsers } = selectedPage;
-  const [invitedUsers, setinvitedUsers] = useRecoilState(invitedEmails);
+  const [invitedUsers, setInvitedUsers] = useRecoilState(invitedEmails);
+  const { sendEmail, removeEmail } = useEmailMutation();
+
+  const { mutate: sendEmailMutate } = sendEmail;
+  const { mutate: removeEmailMutate } = removeEmail;
 
   useEffect(() => {
-    setinvitedUsers(sharedUsers);
+    setInvitedUsers(sharedUsers);
   }, []);
 
   const inviteEmail = async () => {
@@ -30,17 +34,21 @@ function ShareModal() {
       return;
     }
 
-    await sendSharedEmail({ email, _id });
+    sendEmailMutate(
+      { email, _id },
+      {
+        onSuccess: (data) => {
+          if (!data) return;
 
-    if (!invitedUsers?.length) {
-      const newPages = [...pages];
-      const targetPageIndex = newPages.findIndex((v) => v._id === _id);
-      const deletedPage = newPages.splice(targetPageIndex, 1)[0];
-      setPages(newPages);
-      setSharedPages([...sharedPages, deletedPage]);
-    }
-    setinvitedUsers([...(invitedUsers ?? []), email]);
-    setEmail('');
+          queryClient.invalidateQueries(queryKeys.pages);
+          setInvitedUsers([...(invitedUsers ?? []), email]);
+          setEmail('');
+        },
+        onError: (error) => {
+          console.log(error);
+        },
+      },
+    );
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -48,11 +56,25 @@ function ShareModal() {
   };
 
   const deleteEmail = async (email: string, index: number) => {
-    _id && (await deleteInvitedEmail(_id, email));
+    if (!_id) return;
+
+    removeEmailMutate(
+      { _id, email },
+      {
+        onSuccess: (data) => {
+          queryClient.invalidateQueries(queryKeys.pages);
+          console.log(data);
+        },
+        onError: (error) => {
+          console.log(error);
+        },
+      },
+    );
+
     const newInvitedUsers = invitedUsers && [...invitedUsers];
     newInvitedUsers?.splice(index, 1);
 
-    setinvitedUsers(newInvitedUsers);
+    setInvitedUsers(newInvitedUsers);
   };
 
   return (
