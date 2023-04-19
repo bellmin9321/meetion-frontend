@@ -132,7 +132,7 @@ function Content({ page, sharedPage }: ContentProp) {
       socket.on('receive-changes', ({ _id, title, desc, writer }) => {
         if (sharedPage?._id === _id) {
           setWritingUser(writer);
-          if (email === writingUser) return;
+          if (email === writer) return;
 
           title && setTitle(title);
           desc && setDesc(desc);
