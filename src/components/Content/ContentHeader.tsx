@@ -22,9 +22,9 @@ function ContentHeader({ title }: { title: string }) {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 flex flex-row flex-wrap items-center p-3 md:flex-row">
-      <div className="ml-[250px]">{title}</div>
-      <div className="flex flex-wrap items-center justify-center  text-base md:ml-auto">
+    <header className="fixed top-0 left-0 right-0 flex flex-row flex-wrap items-center justify-between p-3">
+      <div className="sm:ml-[250px]">{title}</div>
+      <div className="flex flex-wrap items-center justify-center  text-base sm:right-0 md:ml-auto">
         <span
           className="mr-3 cursor-pointer rounded-md px-2 hover:bg-gray-200 "
           onClick={handleLogout}
