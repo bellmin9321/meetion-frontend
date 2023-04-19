@@ -1,12 +1,15 @@
 import { signOut } from 'next-auth/react';
 import { useState } from 'react';
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
-import { shareModalState } from '@/lib/recoil';
+import { selectPage, shareModalState, userState } from '@/lib/recoil';
 
 function ContentHeader({ title }: { title: string }) {
   const [isModal, setModal] = useRecoilState(shareModalState);
+
+  const { email } = useRecoilValue(userState);
+  const selectedPage = useRecoilValue(selectPage);
   const [isFavorite, setFavorite] = useState<boolean>(false);
 
   const handleLogout = () => {
@@ -31,12 +34,14 @@ function ContentHeader({ title }: { title: string }) {
         >
           로그아웃
         </span>
-        <span
-          className="mr-3 cursor-pointer rounded-md px-2 hover:bg-gray-200"
-          onClick={handleModal}
-        >
-          공유
-        </span>
+        {email === selectedPage?.creator && (
+          <span
+            className="mr-3 cursor-pointer rounded-md px-2 hover:bg-gray-200"
+            onClick={handleModal}
+          >
+            공유
+          </span>
+        )}
         {/* <BiMessageDetail className="icon mr-5 cursor-pointer rounded-md hover:bg-gray-200" /> */}
         {/* <BiTime className="icon mr-5 cursor-pointer rounded-md hover:bg-gray-200" /> */}
         <button onClick={handleClick}>
