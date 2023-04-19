@@ -26,11 +26,16 @@ function ShareModal() {
 
   useEffect(() => {
     setInvitedUsers(sharedUsers);
-  }, []);
+  }, [sharedUsers]);
 
   const inviteEmail = async () => {
     if (user.email === email) {
       alert('본인 계정은 초대할 수 없습니다');
+      return;
+    }
+
+    if (sharedUsers && sharedUsers.length > 3) {
+      alert('최대 4명까지 초대 가능합니다.');
       return;
     }
 
@@ -61,9 +66,8 @@ function ShareModal() {
     removeEmailMutate(
       { _id, email },
       {
-        onSuccess: (data) => {
+        onSuccess: () => {
           queryClient.invalidateQueries(queryKeys.pages);
-          console.log(data);
         },
         onError: (error) => {
           console.log(error);
