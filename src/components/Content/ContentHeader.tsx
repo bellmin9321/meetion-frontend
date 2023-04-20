@@ -44,7 +44,7 @@ function ContentHeader({ title }: { title: string }) {
         )}
         {/* <BiMessageDetail className="icon mr-5 cursor-pointer rounded-md hover:bg-gray-200" /> */}
         {/* <BiTime className="icon mr-5 cursor-pointer rounded-md hover:bg-gray-200" /> */}
-        <button onClick={handleClick}>
+        <span onClick={handleClick}>
           {isFavorite ? (
             <AiFillStar
               className="icon mr-5 cursor-pointer rounded-md 
@@ -53,7 +53,7 @@ function ContentHeader({ title }: { title: string }) {
           ) : (
             <AiOutlineStar className="icon mr-5 cursor-pointer rounded-md hover:bg-gray-200" />
           )}
-        </button>
+        </span>
         {/* <FiMoreHorizontal className="icon mr-5 cursor-pointer rounded-md hover:bg-gray-200" /> */}
       </div>
     </header>
