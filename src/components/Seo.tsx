@@ -5,8 +5,8 @@ const defaultMeta = {
   title: 'Meetion',
   siteName: 'Meetion',
   description:
-    'A starter for Next.js, Tailwind CSS, and TypeScript with Absolute Import, Seo, Link component, pre-configured with Husky',
-  url: 'https://tsnext-tw.thcl.dev',
+    'Meetion for efficient conferencing with video calls and real-time chat',
+  url: 'https://meetion.netlify.app',
   type: 'website',
   robots: 'follow, index',
   image: 'https://tsnext-tw.thcl.dev/images/large-og.png',
@@ -53,11 +53,7 @@ export default function Seo(props: SeoProps) {
             property="og:publish_date"
             content={meta.date}
           />
-          <meta
-            name="author"
-            property="article:author"
-            content="Theodorus Clarence"
-          />
+          <meta name="author" property="article:author" content="bellmin" />
         </>
       )}
 
