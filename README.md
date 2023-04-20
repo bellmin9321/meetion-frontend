@@ -12,8 +12,25 @@
 1. package 설치
 npm i
 
-2. 실행
+2. .env 설정(root directory에 .env 생성)
+
+  LOCAL_BASE_URL=http://localhost:8000/
+                  -> 본인 개발서버 port로 설정
+  --- 아래 설정은 본인 계정으로 직접 설정해야함 ---
+  JWT_SECRET=
+  GITHUB_CLIENT_ID= 
+  GITHUB_CLIENT_SECRET= 
+  GOOGLE_CLIENT_ID= 
+  GOOGLE_CLIENT_SECRET= 
+  KAKAO_CLIENT_ID= 
+  KAKAO_CLIENT_SECRET= 
+  NAVER_CLIENT_ID= 
+  NAVER_CLIENT_SECRET= 
+ 
+
+3. 실행
 npm run dev
+
 ```
 # 🏠 Lighthouse 점수
 <img width="609" alt="image" src="https://user-images.githubusercontent.com/49411767/233463098-f569076a-ab9c-4a88-83db-bf49c26e4e85.png">
