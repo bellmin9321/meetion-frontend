@@ -46,7 +46,7 @@ function SharedPage() {
         {sharedPages?.length > 0 &&
           sharedPages.map((page: PageType) => {
             return (
-              <div
+              <li
                 key={page._id}
                 className={`flex justify-between py-1 pl-4 hover:bg-gray-200 ${getSelectedClass(
                   page?._id,
@@ -77,7 +77,7 @@ function SharedPage() {
                     </div>
                   )}
                 </Link>
-              </div>
+              </li>
             );
           })}
       </ul>

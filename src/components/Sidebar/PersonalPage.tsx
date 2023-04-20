@@ -62,7 +62,7 @@ function PersonalPage() {
         {pages?.length > 0 &&
           pages.map((page: PageType) => {
             return (
-              <div
+              <li
                 key={page._id}
                 className={`flex justify-between py-1 pl-4 hover:bg-gray-200 ${
                   page._id === selectedId ? 'selectedList' : ''
@@ -90,7 +90,7 @@ function PersonalPage() {
                     />
                   </div>
                 </Link>
-              </div>
+              </li>
             );
           })}
       </ul>
