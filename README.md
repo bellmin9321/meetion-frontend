@@ -15,7 +15,8 @@ npm i
 2. 실행
 npm run dev
 ```
-
+# 🏠 Lighthouse 점수
+<img width="609" alt="image" src="https://user-images.githubusercontent.com/49411767/233463098-f569076a-ab9c-4a88-83db-bf49c26e4e85.png">
 
 # 🌈 기술 스택
 
