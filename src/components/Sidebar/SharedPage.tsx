@@ -15,7 +15,7 @@ import { queryKeys } from '@/types/commonType';
 function SharedPage() {
   const sharedPages = useRecoilValue(sharedPagesState);
   const { email } = useRecoilValue(userState);
-  const [selectedId, setSelected] = useRecoilState(selectedPageID);
+  const [selectedId, setSelectedId] = useRecoilState(selectedPageID);
   const { removePage } = usePageMutation();
   const { mutate: deletePageMutate } = removePage;
   const router = useRouter();
@@ -55,7 +55,7 @@ function SharedPage() {
                 <Link
                   href={`/page/${changeParam(page.title)}${page._id}`}
                   className="selected flex w-full justify-between"
-                  onClick={() => setSelected(page?._id)}
+                  onClick={() => setSelectedId(page?._id)}
                 >
                   <div className="flex items-center">
                     <span>
