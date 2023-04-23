@@ -3,11 +3,7 @@ import { QueryCache, QueryClient } from 'react-query';
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 0,
-      staleTime: 10000,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
+      staleTime: 1000 * 5,
     },
   },
   queryCache: new QueryCache({
