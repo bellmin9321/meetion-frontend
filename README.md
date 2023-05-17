@@ -32,8 +32,27 @@ npm i
 npm run dev
 
 ```
+# 🏞️ 페이지 구성
+
+### 로그인 페이지
+<img width="800" alt="image" src="https://github.com/bellmin9321/meetion-frontend/assets/49411767/780c5958-a9e1-41f3-af98-35f3e3c8ca55">
+
+### 메인 페이지
+<img width="800" alt="image" src="https://github.com/bellmin9321/meetion-frontend/assets/49411767/493e18ad-6f02-4e16-b1ef-bce76ba81a4e">
+
+### 공유 버튼 클릭 후 초대하고 싶은 이메일 작성 후 초대하면 아래 공유 페이지로 변경
+<img width="800" alt="image" src="https://github.com/bellmin9321/meetion-frontend/assets/49411767/6c498b6c-d5f2-4417-957d-409dcaa48ad8">
+
+### 공유 페이지(초대 유저 미접속)
+<img width="800" alt="image" src="https://github.com/bellmin9321/meetion-frontend/assets/49411767/613f0e30-6b42-4e7e-a005-f731c8986392">
+
+### 초대된 유저 입장 시 유저와 화상 채팅 화면(시크릿 모드 사용)
+<img width="800" alt="image" src="https://github.com/bellmin9321/meetion-frontend/assets/49411767/0b36ae02-1d6e-4de7-a003-a0f5535a18c1">
+
+
+
 # 🏠 Lighthouse 점수
-<img width="609" alt="image" src="https://user-images.githubusercontent.com/49411767/233463098-f569076a-ab9c-4a88-83db-bf49c26e4e85.png">
+<img width="500" alt="image" src="https://user-images.githubusercontent.com/49411767/233463098-f569076a-ab9c-4a88-83db-bf49c26e4e85.png">
 
 # 🌈 기술 스택
 
@@ -58,14 +77,16 @@ npm run dev
 
 ### 1. 공유한 유저와 실시간 문서 작성 및 화상 채팅
 - 1:1 화상 채팅
+- webcam On/Off, mike On/Off
 
   
 
 ### 2. 페이지 공유
-- 해당 페이지에 이메일을 초대하여 페이지 공유
+- 해당 페이지에 이메일을 초대하여 페이지 공유(오른쪽 상단 공유 버튼 클릭 후 이메일 초대)
+- 공유된 페이지 내에서 화상채팅이 가능합니다.
 
 
-### 3.페이지 생성 / 수정 / 삭제
+### 3.페이지 CRUD
 
 
 # 🔥 보완할 점
