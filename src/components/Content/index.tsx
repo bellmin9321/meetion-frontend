@@ -87,7 +87,7 @@ function Content({ page, sharedPage }: ContentProp) {
       newPages.splice(targetIndex, 1, updatedPage);
       setPages(newPages);
     }
-  }, [title]);
+  }, [title, desc]);
 
   // Sidebar Page 선택 시 default title, desc 설정
   useEffect(() => {
@@ -173,9 +173,10 @@ function Content({ page, sharedPage }: ContentProp) {
     input: string,
   ) => {
     if (input === 'title') setTitle(e.target.value);
-    else setDesc(e.target.value);
-
-    handleResizeHeight();
+    else {
+      setDesc(e.target.value);
+      handleResizeHeight();
+    }
   };
 
   const handleClick = (e: MouseEvent) => {

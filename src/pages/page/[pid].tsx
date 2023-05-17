@@ -5,14 +5,11 @@ import { getSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { queryClient } from '@/lib/api/queryClient';
 import useHomePage from '@/lib/hooks/useHomePage';
 import { pageListState, selectPage, sharedPagesState } from '@/lib/recoil';
 
 import Content from '@/components/Content';
 import Layout from '@/components/layout';
-
-import { queryKeys } from '@/types/commonType';
 
 function Page() {
   useHomePage();
@@ -30,11 +27,8 @@ function Page() {
   }
   const page = pages.find((page) => page._id === originalId);
   const sharedPage = sharedPages.find((page) => page._id === originalId);
-  console.log(sharedPage);
 
   useEffect(() => {
-    queryClient.invalidateQueries(queryKeys.pages);
-
     if (page) {
       setSelectedPage(page);
     } else if (sharedPage) {
