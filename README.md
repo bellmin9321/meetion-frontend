@@ -2,9 +2,13 @@
 
 [배포 주소](https://meetion.netlify.app)
 
+<br />
+
 # 💬 **프로젝트 설명**
 
-> nextjs와 nodejs로 Notion과 구글밋을 융합한 풀스택 프로젝트입니다. 노션의 문서를 공유한 유저와 Socket을 이용하여 실시간 문서 작성 기능 및 구글밋의 화상 채팅을 적용했습니다. 백엔드는 nodejs로 개발되었고 mongoDB에 문서 및 유저 데이터를 저장했습니다. AWS EC2와 로드밸런서를 적용하여 무중단 배포 운영중입니다.
+> nextjs와 nodejs로 Notion과 구글밋을 융합한 풀스택 프로젝트입니다. 노션의 문서를 공유한 유저와 Socket을 이용하여 실시간 문서 작성 기능 및 구글밋의 화상 채팅을 적용했습니다. 백엔드는 nodejs로 개발되었고 mongoDB에 문서 및 유저 데이터를 저장했습니다. AWS EC2와 로드밸런서를 적용하여 무중단 배포 운영중입니다.  
+
+<br />
 
 # 🔑 **프로젝트 실행방법**
 
@@ -32,6 +36,8 @@ npm i
 npm run dev
 
 ```
+<br />
+
 # 🏞️ 페이지 구성
 
 ### 로그인 페이지
@@ -50,9 +56,38 @@ npm run dev
 <img width="800" alt="image" src="https://github.com/bellmin9321/meetion-frontend/assets/49411767/0b36ae02-1d6e-4de7-a003-a0f5535a18c1">
 
 
+<br />
+
+
+# 🧪 Cypress 실행 방법 및 테스트
+
+### 실행 방법
+   1. 새로 터미널을 열고 아래 명령어 실행  
+`npm run cypress:open`
+
+1. 명령어 실행 후 화면 아래 순서로 실행  
+ **E2E Testing** > **Chrome** > **Start E2E Testing in Chrome** > **Meetion.cy.ts**
+
+### 테스트
+
+1. 로그인 테스트
+
+https://github.com/bellmin9321/meetion-frontend/assets/49411767/b8580ab6-3798-4e6d-ad71-af722e36a190
+
+2. 페이지 생성 후 삭제 테스트
+
+https://github.com/bellmin9321/meetion-frontend/assets/49411767/ca7a80a5-0c29-4a7a-9943-0e4929fca17e
+
+3. 공유할 페이지 생성 후 공유 테스트
+
+https://github.com/bellmin9321/meetion-frontend/assets/49411767/19187377-047e-4e35-8271-c948d2a938f1
+
+<br />
 
 # 🏠 Lighthouse 점수
 <img width="500" alt="image" src="https://user-images.githubusercontent.com/49411767/233463098-f569076a-ab9c-4a88-83db-bf49c26e4e85.png">
+
+<br />
 
 # 🌈 기술 스택
 
@@ -70,8 +105,12 @@ npm run dev
   - 보일러 플레이트 없이 전역 상태 관리
 - **Tailwind**
   - class 없이 사용 가능
+- **Cypress**
+  - 자동화 E2E 
 - **AWS EC2 & Loadbalancer**
   - HTTPS 통신 및 무중단 배포 운영
+
+<br />
 
 # ⭐️ 주요 기능
 
@@ -88,6 +127,7 @@ npm run dev
 
 ### 3.페이지 CRUD
 
+<br />
 
 # 🔥 보완할 점
 - Web-RTC 화상 채팅을 1:n으로 기능 추가 필요
