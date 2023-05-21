@@ -89,12 +89,14 @@ function ShareModal() {
       </div>
       <div className="flex items-center justify-center ">
         <input
+          name="invitedEmail"
           className="mr-2 w-[80%] rounded border-[1px] border-gray-300 bg-gray-100 py-1 pl-2 placeholder-slate-400"
           placeholder="이메일 추가"
           value={email}
           onChange={handleChange}
         />
         <button
+          id="inviteBtn"
           className="rounded bg-blue-500 py-1 px-2 text-white"
           onClick={inviteEmail}
         >

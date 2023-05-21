@@ -85,6 +85,7 @@ function PersonalPage() {
                   </div>
                   <div className="flex items-center">
                     <AiFillDelete
+                      id="deleteBtn"
                       className="mr-4 flex cursor-pointer items-center text-gray-600 hover:text-red-500"
                       onClick={() => handleDelete(page._id)}
                     />
