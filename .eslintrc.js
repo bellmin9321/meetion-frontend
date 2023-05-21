@@ -64,7 +64,8 @@ module.exports = {
         ],
       },
     ],
-    "@next/next/no-img-element": "off"
+    "@next/next/no-img-element": "off",
+    'cypress/no-unnecessary-waiting': 'off'
   },
   globals: {
     React: true,
