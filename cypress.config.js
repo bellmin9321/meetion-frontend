@@ -1,8 +1,10 @@
 import { defineConfig } from 'cypress';
-import { plugins } from 'cypress-social-logins'
-
 
 module.exports = defineConfig({
+  env: {
+    "credential-email": 'bellmin9321@gmail.com',
+    "credential-pwd": 'cypress',
+  },
   e2e: {
     experimentalStudio: true,
     baseUrl: 'http://localhost:3000',
