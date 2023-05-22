@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-describe('Meetion E2E Test', { testIsolation: false }, () => {
+describe('Meetion E2E Test', () => {
   const email = Cypress.env('credential-email');
   const password = Cypress.env('credential-pwd');
 
