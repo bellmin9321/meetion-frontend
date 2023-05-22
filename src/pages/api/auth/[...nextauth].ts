@@ -70,7 +70,7 @@ export default NextAuth({
     },
   },
   session: {
-    strategy: process.env.NODE_ENV === 'production' ? 'database' : 'jwt',
+    strategy: 'jwt',
   },
   providers,
   pages: {
