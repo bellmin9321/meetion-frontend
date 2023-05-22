@@ -42,12 +42,20 @@ function PersonalPage() {
   const handleDelete = (id?: string) => {
     deletePageMutate(id ?? '', {
       onSuccess: () => {
-        const { _id, title } = pages[0];
-
         queryClient.invalidateQueries(queryKeys.pages);
-        router.push(`/page/${changeParam(title)}${_id}`, undefined, {
-          shallow: true,
-        });
+        if (pages.length > 1) {
+          const { _id, title } = pages[0];
+
+          router.push(`/page/${changeParam(title)}${_id}`, undefined, {
+            shallow: true,
+          });
+        } else if (sharedPages.length) {
+          const { _id, title } = sharedPages[0];
+
+          router.push(`/page/${changeParam(title)}${_id}`, undefined, {
+            shallow: true,
+          });
+        }
       },
       onError: (error) => {
         console.log(error);
@@ -77,19 +85,24 @@ function PersonalPage() {
                     <span>
                       <AiOutlineRight className="text-sm  text-gray-600" />
                     </span>
-                    <li className="ml-2 text-gray-700">
+                    <span className="ml-2 text-gray-700">
                       {page?.title
                         ? textLengthOverCut(page?.title)
                         : '제목 없음'}
-                    </li>
+                    </span>
                   </div>
-                  <div className="flex items-center">
-                    <AiFillDelete
-                      id="deleteBtn"
-                      className="mr-4 flex cursor-pointer items-center text-gray-600 hover:text-red-500"
-                      onClick={() => handleDelete(page._id)}
-                    />
-                  </div>
+                  {!sharedPages.length &&
+                  pages.length === 1 &&
+                  !page.title &&
+                  !page.desc ? null : (
+                    <div className="flex items-center">
+                      <AiFillDelete
+                        id="deleteBtn"
+                        className="mr-4 flex cursor-pointer items-center text-gray-600 hover:text-red-500"
+                        onClick={() => handleDelete(page._id)}
+                      />
+                    </div>
+                  )}
                 </Link>
               </li>
             );
