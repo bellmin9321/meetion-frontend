@@ -6,13 +6,19 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 
 import { queryClient } from '@/lib/api/queryClient';
 import usePageMutation from '@/lib/hooks/usePageMutation';
-import { selectedPageID, sharedPagesState, userState } from '@/lib/recoil';
+import {
+  pageListState,
+  selectedPageID,
+  sharedPagesState,
+  userState,
+} from '@/lib/recoil';
 import { changeParam, textLengthOverCut } from '@/lib/util';
 
 import { PageType } from '@/types';
 import { queryKeys } from '@/types/commonType';
 
 function SharedPage() {
+  const pages = useRecoilValue(pageListState);
   const sharedPages = useRecoilValue(sharedPagesState);
   const { email } = useRecoilValue(userState);
   const [selectedId, setSelectedId] = useRecoilState(selectedPageID);
@@ -26,12 +32,19 @@ function SharedPage() {
   const handleDelete = (id?: string) => {
     deletePageMutate(id ?? '', {
       onSuccess: () => {
-        const { _id, title } = sharedPages[0];
-
         queryClient.invalidateQueries(queryKeys.pages);
-        router.push(`/page/${changeParam(title)}${_id}`, undefined, {
-          shallow: true,
-        });
+        if (sharedPages.length > 1) {
+          const { _id, title } = sharedPages[0];
+          router.push(`/page/${changeParam(title)}${_id}`, undefined, {
+            shallow: true,
+          });
+        } else if (pages.length) {
+          const { _id, title } = pages[0];
+
+          router.push(`/page/${changeParam(title)}${_id}`, undefined, {
+            shallow: true,
+          });
+        }
       },
       onError: (error) => {
         console.log(error);
@@ -61,11 +74,11 @@ function SharedPage() {
                     <span>
                       <AiOutlineRight className="text-sm  text-gray-600" />
                     </span>
-                    <li className="ml-2 text-gray-700">
+                    <span className="ml-2 text-gray-700">
                       {page?.title
                         ? textLengthOverCut(page?.title)
                         : '제목 없음'}
-                    </li>
+                    </span>
                   </div>
 
                   {email === page.creator && (
