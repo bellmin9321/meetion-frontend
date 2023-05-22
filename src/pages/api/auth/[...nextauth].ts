@@ -22,40 +22,46 @@ const providers = [
     clientId: process.env.NAVER_CLIENT_ID as string,
     clientSecret: process.env.NAVER_CLIENT_SECRET as string,
   }),
-  CredentialsProvider({
-    name: 'Credentials',
-    credentials: {
-      email: {
-        label: 'email',
-        type: 'text',
-        placeholder: '아이디를 입력하세요',
-      },
-      password: { label: 'Password', type: 'password' },
-    },
-    async authorize(credentials) {
-      try {
-        if (!credentials) throw new Error('no credentials to log in as');
-
-        const { email, password } = credentials as {
-          email: string;
-          password: string;
-        };
-
-        if (email === 'bellmin9321@gmail.com' && password === 'cypress') {
-          return {
-            id: 1,
-            name: '김종민',
-            email: 'bellmin9321@gmail.com',
-          };
-        }
-
-        return null;
-      } catch (error) {
-        return null;
-      }
-    },
-  }),
 ];
+
+if (process.env.NODE_ENV !== 'production') {
+  providers.push(
+    CredentialsProvider({
+      name: 'Credentials',
+      credentials: {
+        email: {
+          label: 'email',
+          type: 'text',
+          placeholder: '아이디를 입력하세요',
+        },
+        password: { label: 'Password', type: 'password' },
+      },
+      async authorize(credentials) {
+        try {
+          if (!credentials) throw new Error('no credentials to log in as');
+
+          const { email, password } = credentials as {
+            email: string;
+            password: string;
+          };
+
+          if (email === 'bellmin9321@gmail.com' && password === 'cypress') {
+            return {
+              id: 1,
+              name: '김종민',
+              email: 'bellmin9321@gmail.com',
+            };
+          }
+
+          return null;
+        } catch (error) {
+          return null;
+        }
+      },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    }) as any,
+  );
+}
 
 export default NextAuth({
   callbacks: {

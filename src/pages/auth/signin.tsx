@@ -38,7 +38,7 @@ function SignIn({ providers }: { providers: LoginProp }) {
           </div>
           <div className="flex w-[350px] flex-col justify-center ">
             {Object.values(providers).map((provider, i) => {
-              if (i === Object.values(providers).length - 1) {
+              if (provider.id === 'credentials') {
                 return (
                   <form
                     key={provider.id}
