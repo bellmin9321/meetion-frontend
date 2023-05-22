@@ -12,15 +12,16 @@
 
 # 🔑 **프로젝트 실행방법**
 
+
+1. npm package 설치  
+  터미널에서 `npm i` 명령어 실행
+
+2. .env 설정(root directory에 .env 파일 생성)
 ```
-1. package 설치
-npm i
-
-2. .env 설정(root directory에 .env 생성)
-
   LOCAL_BASE_URL=http://localhost:8000/
-                  -> 본인 개발서버 port로 설정
-  --- 아래 설정은 본인 계정으로 직접 설정해야함 ---
+                  -> 본인 개발서버 port로 설정  
+
+  --- 아래 설정은 본인 SNS 계정에서 받은 값으로 직접 설정 ---
   JWT_SECRET=
   GITHUB_CLIENT_ID= 
   GITHUB_CLIENT_SECRET= 
@@ -30,12 +31,11 @@ npm i
   KAKAO_CLIENT_SECRET= 
   NAVER_CLIENT_ID= 
   NAVER_CLIENT_SECRET= 
- 
+ ```
 
-3. 실행
-npm run dev
+3. 어플리케잉션 실행  
+   `npm run dev`
 
-```
 <br />
 
 # 🏞️ 페이지 구성
@@ -65,7 +65,7 @@ npm run dev
    1. 새로 터미널을 열고 아래 명령어 실행  
 `npm run cypress:open`
 
-1. 명령어 실행 후 화면 아래 순서로 실행  
+1. 명령어 실행 후 cypress 프로그램 화면에서 아래 순서로 실행  
  **E2E Testing** > **Chrome** > **Start E2E Testing in Chrome** > **Meetion.cy.ts**
 
 ### 테스트
@@ -102,13 +102,20 @@ https://github.com/bellmin9321/meetion-frontend/assets/49411767/19187377-047e-4e
 - **React-query**
   - API 데이터 캐싱 및 관리
 - **Recoil**
-  - 보일러 플레이트 없이 전역 상태 관리
+  - 보일러 플레이트 없이 단순한 설정으로 전역 상태 관리
 - **Tailwind**
-  - class 없이 사용 가능
+  - class명을 따로 지정하지 않고 사용 가능
+  - @apply 메소드를 이용하여 전역으로 특정 클래스명 사용 가능
+  ```
+  .layout {
+    max-width: 68.75rem;
+    @apply mx-auto w-11/12;
+  }
+  ```
 - **Cypress**
-  - 자동화 E2E 
+  - 유저 입장에서 E2E 자동화 테스트
 - **AWS EC2 & Loadbalancer**
-  - HTTPS 통신 및 무중단 배포 운영
+  - HTTPS 통신 및 pm2를 이용하여 무중단 배포 운영
 
 <br />
 
