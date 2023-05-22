@@ -41,3 +41,5 @@ describe('Meetion E2E Test', { testIsolation: false }, () => {
     cy.wait(1500);
   });
 });
+
+export {};
