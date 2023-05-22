@@ -52,11 +52,37 @@ function Content({ page, sharedPage }: ContentProp) {
 
   const debouncedTitle = useDebounce({ value: title, delay: 500 });
   const debouncedDesc = useDebounce({ value: desc, delay: 500 });
-  const { addPage } = usePageMutation();
   const router = useRouter();
 
   const inputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const { addPage } = usePageMutation();
+  const { mutate: addPageMutate } = addPage;
+
+  // 페이지가 한 개도 없을 경우 자동으로 빈 제목의 페이지 생성
+  useEffect(() => {
+    if (email && !pages.length && !sharedPages.length) {
+      const defaultPage = {
+        _id: '',
+        creator: email,
+        title: '',
+        desc: '',
+        sharedUsers: [],
+      };
+
+      addPageMutate(defaultPage, {
+        onSuccess: (data) => {
+          queryClient.invalidateQueries(queryKeys.pages);
+          if (data) {
+            router.push(`/page/${data._id}`, undefined, { shallow: true });
+          }
+        },
+        onError: (error) => {
+          console.log(error);
+        },
+      });
+    }
+  }, [pages, sharedPages]);
 
   const updatedPage = {
     ...page,
@@ -98,7 +124,7 @@ function Content({ page, sharedPage }: ContentProp) {
       setTitle(page.title);
       setDesc(page.desc);
 
-      if (page.title === '' && inputRef.current) {
+      if (page.title === '' && page.desc === '' && inputRef.current) {
         inputRef.current.focus();
       }
     }
@@ -146,27 +172,6 @@ function Content({ page, sharedPage }: ContentProp) {
       socket.emit('get-page', updatedPage);
     }
   }, [debouncedTitle, debouncedDesc]);
-
-  const { mutate: addPageMutate } = addPage;
-
-  const handleAddPage = () => {
-    if (!title) {
-      alert('제목을 입력해주세요');
-      return;
-    }
-
-    addPageMutate(newPage, {
-      onSuccess: (data) => {
-        queryClient.invalidateQueries(queryKeys.pages);
-        if (data) {
-          router.push(`/page/${data._id}`, undefined, { shallow: true });
-        }
-      },
-      onError: (error) => {
-        console.log(error);
-      },
-    });
-  };
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -267,22 +272,11 @@ function Content({ page, sharedPage }: ContentProp) {
             id="desc"
             className="contentInput placeholder:text-m h-[200px] justify-center placeholder:text-gray-400"
             placeholder="설명 작성하기"
-            // placeholder="'/'를 입력해 명령어를 사용하세요"
             onChange={(e) => handleChange(e, 'desc')}
             onClick={handleClick}
             value={desc}
             ref={textareaRef}
           />
-          {!page && !sharedPage && (
-            <div className="mt-10 w-2/3">
-              <button
-                className="mr-5 rounded bg-blue-500 px-3 py-2 text-white"
-                onClick={handleAddPage}
-              >
-                생성
-              </button>
-            </div>
-          )}
         </div>
       </div>
       {isModal && <Modal component={<ShareModal />} />}
