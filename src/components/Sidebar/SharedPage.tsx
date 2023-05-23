@@ -54,7 +54,7 @@ function SharedPage() {
 
   return sharedPages?.length ? (
     <div className="mb-6">
-      <div className="ml-4 mb-2 text-sm text-gray-500">공유된 페이지</div>
+      <div className="mb-2 ml-4 text-sm text-gray-500">공유된 페이지</div>
       <ul>
         {sharedPages?.length > 0 &&
           sharedPages.map((page: PageType) => {
