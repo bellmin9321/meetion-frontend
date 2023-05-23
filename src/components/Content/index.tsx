@@ -39,11 +39,15 @@ function Content({ page, sharedPage }: ContentProp) {
   const [newPage, setNewPage] = useRecoilState(newPageState);
   const [pages, setPages] = useRecoilState(pageListState);
   const [sharedPages, setSharedPages] = useRecoilState(sharedPagesState);
-  const { email, image } = useRecoilValue(userState);
+  const { email, name, image } = useRecoilValue(userState);
   const isModal = useRecoilValue(shareModalState);
 
-  const [title, setTitle] = useState<string>('');
-  const [desc, setDesc] = useState<string | undefined>('');
+  const [title, setTitle] = useState<string>(
+    page?.title || sharedPage?.title || '',
+  );
+  const [desc, setDesc] = useState<string | undefined>(
+    page?.desc || sharedPage?.title || '',
+  );
   const [writingUser, setWritingUser] = useState<string | undefined>('');
   const [socket, setSocket] = useState<Socket | null>(null);
   const [profile, setProfile] = useState<string>('');
@@ -236,8 +240,8 @@ function Content({ page, sharedPage }: ContentProp) {
     <>
       <ContentHeader title={title} />
       <div className="flex h-screen flex-col items-center sm:ml-64">
-        <div className="mt-20 mb-10">
-          {sharedPage && <Video roomName={router.query.pid} />}
+        <div className="mb-10 mt-20">
+          {sharedPage && <Video roomName={router.query.pid} name={name} />}
         </div>
         {/* 본인 계정은 프로필이 보이면 안됨 */}
         {sharedPage && profile && email !== profileEmail && (
