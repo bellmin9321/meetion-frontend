@@ -33,7 +33,7 @@
   NAVER_CLIENT_SECRET= 
  ```
 
-3. 어플리케잉션 실행  
+3. 어플리케이션 실행  
    `npm run dev`
 
 <br />
@@ -136,7 +136,9 @@ https://github.com/bellmin9321/meetion-frontend/assets/49411767/19187377-047e-4e
 
 <br />
 
-# 🔥 보완할 점
-- Web-RTC 화상 채팅을 1:n으로 기능 추가 필요
-- 페이지의 description을 text가 아닌 Input 단위로 저장하기
-- image 및 텍스트 Drag & Drop 적용
+# 🔥 업데이트 예정 기능
+- [ ] Web-RTC 화상 채팅을 1:n으로 기능
+- [ ] 유저간 화면 공유 기능
+- [ ] 페이지의 description을 text가 아닌 Input 단위로 저장하기
+- [ ] image 및 텍스트 Drag & Drop 적용
+- [ ] GithubAction을 통한 CI/CD 배포 자동화 
