@@ -16,7 +16,7 @@ function useHomePage() {
   const { data: session } = useSession();
   const setUser = useSetRecoilState(userState);
   const [pages, setPages] = useRecoilState(pageListState);
-  const setSharedPages = useSetRecoilState(sharedPagesState);
+  const [sharedPages, setSharedPages] = useRecoilState(sharedPagesState);
   const { addUser } = useUserMutation();
   const router = useRouter();
 
@@ -44,9 +44,9 @@ function useHomePage() {
   );
 
   useEffect(() => {
-    if (pages.length && !router.query) {
-      router.push(`/page/${pages[0]?._id}`, undefined, { shallow: true });
-    }
+    router.push(`/page/${(pages[0] || sharedPages[0])?._id}`, undefined, {
+      shallow: true,
+    });
   }, []);
 }
 
