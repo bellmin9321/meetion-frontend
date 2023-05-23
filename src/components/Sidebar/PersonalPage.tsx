@@ -22,13 +22,6 @@ function PersonalPage() {
   const [selectedId, setSelected] = useRecoilState(selectedPageID);
 
   useEffect(() => {
-    // 공유 페이지는 있고 개인 페이지가 없을 경우에는 '/' 으로
-    if (!pages.length && !sharedPages.length && !router.query) {
-      router.push('/', undefined, { shallow: true });
-    }
-  }, [pages]);
-
-  useEffect(() => {
     if (router.query.pid?.includes('-')) {
       const pid = router.query.pid as string;
 
@@ -65,7 +58,7 @@ function PersonalPage() {
 
   return (
     <div className="mb-6">
-      <div className="ml-4 mb-2 text-sm text-gray-500">개인 페이지</div>
+      <div className="mb-2 ml-4 text-sm text-gray-500">개인 페이지</div>
       <ul>
         {pages?.length > 0 &&
           pages.map((page: PageType) => {
