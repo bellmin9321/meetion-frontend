@@ -6,9 +6,10 @@ import { io, Socket } from 'socket.io-client';
 
 interface VideoProps {
   roomName?: string[] | string;
+  name?: string;
 }
 
-function Video({ roomName }: VideoProps) {
+function Video({ roomName, name }: VideoProps) {
   const socketRef = useRef<Socket>();
   const myVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
@@ -131,6 +132,7 @@ function Video({ roomName }: VideoProps) {
 
     socketRef.current.emit('join_room', {
       room: roomName,
+      name,
     });
 
     getMedia();
