@@ -10,9 +10,7 @@ import React, {
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { io, Socket } from 'socket.io-client';
 
-import { queryClient } from '@/lib/api/queryClient';
 import useDebounce from '@/lib/hooks/useDebounce';
-import usePageMutation from '@/lib/hooks/usePageMutation';
 import {
   newPageState,
   pageListState,
@@ -28,7 +26,6 @@ import Video from '@/components/Video';
 import ContentHeader from './ContentHeader';
 
 import { PageType } from '@/types';
-import { queryKeys } from '@/types/commonType';
 
 interface ContentProp {
   page?: PageType;
@@ -60,33 +57,6 @@ function Content({ page, sharedPage }: ContentProp) {
 
   const inputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const { addPage } = usePageMutation();
-  const { mutate: addPageMutate } = addPage;
-
-  // 페이지가 한 개도 없을 경우 자동으로 빈 제목의 페이지 생성
-  useEffect(() => {
-    if (email && !pages.length && !sharedPages.length) {
-      const defaultPage = {
-        _id: '',
-        creator: email,
-        title: '',
-        desc: '',
-        sharedUsers: [],
-      };
-
-      addPageMutate(defaultPage, {
-        onSuccess: (data) => {
-          queryClient.invalidateQueries(queryKeys.pages);
-          if (data) {
-            router.push(`/page/${data._id}`, undefined, { shallow: true });
-          }
-        },
-        onError: (error) => {
-          console.log(error);
-        },
-      });
-    }
-  }, [pages, sharedPages]);
 
   const updatedPage = {
     ...page,
