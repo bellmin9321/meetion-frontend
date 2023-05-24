@@ -1,60 +1,44 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 import React, { useEffect } from 'react';
 import { AiFillDelete, AiOutlineRight } from 'react-icons/ai';
-import { useRecoilState, useRecoilValue } from 'recoil';
 
-import { queryClient } from '@/lib/api/queryClient';
-import usePageMutation from '@/lib/hooks/usePageMutation';
-import { pageListState, selectedPageID, sharedPagesState } from '@/lib/recoil';
+import useSidebar from '@/lib/hooks/useSidebar';
 import { changeParam, textLengthOverCut } from '@/lib/util';
 
 import { PageType } from '@/types';
-import { queryKeys } from '@/types/commonType';
 
 function PersonalPage() {
+  const { data: session } = useSession();
   const router = useRouter();
-  const pages = useRecoilValue(pageListState);
-  const sharedPages = useRecoilValue(sharedPagesState);
-  const { removePage } = usePageMutation();
-  const { mutate: deletePageMutate } = removePage;
-  const [selectedId, setSelected] = useRecoilState(selectedPageID);
+
+  const {
+    pages,
+    sharedPages,
+    selectedId,
+    handleAddPage,
+    handleDelete,
+    setSelectedId,
+  } = useSidebar();
+
+  useEffect(() => {
+    if (session && !pages.length && !sharedPages.length) {
+      handleAddPage();
+    }
+  }, [pages, sharedPages]);
 
   useEffect(() => {
     if (router.query.pid?.includes('-')) {
       const pid = router.query.pid as string;
 
-      setSelected(pid.split('-')[1]);
+      setSelectedId(pid.split('-')[1]);
       return;
     }
 
-    setSelected(router.query.pid as string);
+    setSelectedId(router.query.pid as string);
   }, [router.query.pid]);
-
-  const handleDelete = (id?: string) => {
-    deletePageMutate(id ?? '', {
-      onSuccess: () => {
-        queryClient.invalidateQueries(queryKeys.pages);
-        if (pages.length > 1) {
-          const { _id, title } = pages[0];
-
-          router.push(`/page/${changeParam(title)}${_id}`, undefined, {
-            shallow: true,
-          });
-        } else if (sharedPages.length) {
-          const { _id, title } = sharedPages[0];
-
-          router.push(`/page/${changeParam(title)}${_id}`, undefined, {
-            shallow: true,
-          });
-        }
-      },
-      onError: (error) => {
-        console.log(error);
-      },
-    });
-  };
 
   return (
     <div className="mb-6">
@@ -72,7 +56,7 @@ function PersonalPage() {
                 <Link
                   href={`/page/${changeParam(page.title)}${page._id}`}
                   className="selected flex w-full justify-between"
-                  onClick={() => setSelected(page?._id)}
+                  onClick={() => setSelectedId(page?._id)}
                 >
                   <div className="flex items-center">
                     <span>
@@ -92,7 +76,7 @@ function PersonalPage() {
                       <AiFillDelete
                         id="deleteBtn"
                         className="mr-4 flex cursor-pointer items-center text-gray-600 hover:text-red-500"
-                        onClick={() => handleDelete(page._id)}
+                        onClick={() => handleDelete(page._id, 'PERSONAL')}
                       />
                     </div>
                   )}
