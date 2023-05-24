@@ -1,56 +1,15 @@
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import React from 'react';
 import { AiFillDelete, AiOutlineRight } from 'react-icons/ai';
-import { useRecoilState, useRecoilValue } from 'recoil';
 
-import { queryClient } from '@/lib/api/queryClient';
-import usePageMutation from '@/lib/hooks/usePageMutation';
-import {
-  pageListState,
-  selectedPageID,
-  sharedPagesState,
-  userState,
-} from '@/lib/recoil';
+import useSidebar from '@/lib/hooks/useSidebar';
 import { changeParam, textLengthOverCut } from '@/lib/util';
 
 import { PageType } from '@/types';
-import { queryKeys } from '@/types/commonType';
 
 function SharedPage() {
-  const pages = useRecoilValue(pageListState);
-  const sharedPages = useRecoilValue(sharedPagesState);
-  const { email } = useRecoilValue(userState);
-  const [selectedId, setSelectedId] = useRecoilState(selectedPageID);
-  const { removePage } = usePageMutation();
-  const { mutate: deletePageMutate } = removePage;
-  const router = useRouter();
-
-  const getSelectedClass = (id?: string) =>
-    selectedId === id ? 'selectedList' : '';
-
-  const handleDelete = (id?: string) => {
-    deletePageMutate(id ?? '', {
-      onSuccess: () => {
-        queryClient.invalidateQueries(queryKeys.pages);
-        if (sharedPages.length > 1) {
-          const { _id, title } = sharedPages[0];
-          router.push(`/page/${changeParam(title)}${_id}`, undefined, {
-            shallow: true,
-          });
-        } else if (pages.length) {
-          const { _id, title } = pages[0];
-
-          router.push(`/page/${changeParam(title)}${_id}`, undefined, {
-            shallow: true,
-          });
-        }
-      },
-      onError: (error) => {
-        console.log(error);
-      },
-    });
-  };
+  const { email, sharedPages, handleDelete, getSelectedClass, setSelectedId } =
+    useSidebar();
 
   return sharedPages?.length ? (
     <div className="mb-6">
@@ -85,7 +44,7 @@ function SharedPage() {
                     <div className="flex items-center">
                       <AiFillDelete
                         className="mr-4 flex cursor-pointer items-center text-gray-600 hover:text-red-500"
-                        onClick={() => handleDelete(page._id)}
+                        onClick={() => handleDelete(page._id, 'SAHRED')}
                       />
                     </div>
                   )}

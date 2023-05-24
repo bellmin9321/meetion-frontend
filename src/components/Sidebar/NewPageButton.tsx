@@ -1,45 +1,15 @@
-import { useRouter } from 'next/router';
 import React from 'react';
 import { BiPlus } from 'react-icons/bi';
-import { useRecoilValue } from 'recoil';
 
-import { queryClient } from '@/lib/api/queryClient';
-import usePageMutation from '@/lib/hooks/usePageMutation';
-import { userState } from '@/lib/recoil';
-
-import { queryKeys } from '@/types/commonType';
+import useSidebar from '@/lib/hooks/useSidebar';
 
 function NewPageButton() {
-  const { email } = useRecoilValue(userState);
-  const { addPage } = usePageMutation();
-  const { mutate: addPageMutate } = addPage;
-  const router = useRouter();
-
-  const page = {
-    creator: email,
-    title: '',
-    desc: '',
-    sharedUsers: [],
-  };
-
-  const createNewPage = () => {
-    addPageMutate(page, {
-      onSuccess: (data) => {
-        if (data) {
-          queryClient.invalidateQueries(queryKeys.pages);
-          router.push(`/page/${data._id}`);
-        }
-      },
-      onError: (error) => {
-        console.log(error);
-      },
-    });
-  };
+  const { handleAddPage } = useSidebar();
 
   return (
     <div
       className="fixed bottom-0 flex w-full cursor-pointer border-t-[1px] py-4 hover:bg-gray-200"
-      onClick={createNewPage}
+      onClick={handleAddPage}
     >
       <span className="ml-4">
         <BiPlus className="mr-3 h-6 w-6 text-gray-500" />
